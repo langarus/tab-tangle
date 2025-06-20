@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Dashboard Extension",
+  "version": "1.0.0",
+  "description": "Sends open tab information to dashboard",
+  "permissions": ["activeTab", "tabs", "storage"],
+  "externally_connectable": {
+    "matches": ["http://localhost:3002/*"]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tab Dashboard"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
