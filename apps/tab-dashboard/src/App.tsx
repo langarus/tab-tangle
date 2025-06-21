@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { TabInfo, ViewMode, NotificationState } from "./types";
 import { ModeSelector } from "./components/ModeSelector";
-import TabList from "./components/TabList";
-import { WindowsView } from "./components/WindowsView";
-import { DomainsView } from "./components/DomainsView";
 import { Notification } from "./components/Notification";
+import { TabsContent } from "./components/TabsContent";
 
 function App() {
   const [tabs, setTabs] = useState<TabInfo[]>([]);
@@ -12,7 +10,7 @@ function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [currentMode, setCurrentMode] = useState<ViewMode>("all");
   const [notification, setNotification] = useState<NotificationState | null>(
-    null,
+    null
   );
   const notificationTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,7 +41,7 @@ function App() {
     // Listen for custom events from the extension
     window.addEventListener(
       "extensionMessage",
-      handleExtensionMessage as EventListener,
+      handleExtensionMessage as EventListener
     );
 
     // Request initial tabs data
@@ -51,7 +49,7 @@ function App() {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "REQUEST_TABS" },
-        }),
+        })
       );
     };
 
@@ -66,7 +64,7 @@ function App() {
     return () => {
       window.removeEventListener(
         "extensionMessage",
-        handleExtensionMessage as EventListener,
+        handleExtensionMessage as EventListener
       );
       clearInterval(interval);
     };
@@ -94,7 +92,7 @@ function App() {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TAB", tabId },
-        }),
+        })
       );
       showNotification([tab]);
     }
@@ -114,7 +112,7 @@ function App() {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TABS", tabIds },
-        }),
+        })
       );
       showNotification(tabsToClose);
     }
@@ -134,37 +132,13 @@ function App() {
     window.dispatchEvent(
       new CustomEvent("dashboardMessage", {
         detail: { type: "RESTORE_TABS", tabs: tabsToRestore },
-      }),
+      })
     );
 
     setNotification(null);
     if (notificationTimeout.current) {
       clearTimeout(notificationTimeout.current);
     }
-  };
-
-  const renderCurrentView = () => {
-    if (currentMode === "windows") {
-      return (
-        <WindowsView
-          tabs={tabs}
-          onClose={handleClose}
-          onCloseGroup={handleCloseGroup}
-        />
-      );
-    }
-
-    if (currentMode === "domains") {
-      return (
-        <DomainsView
-          tabs={tabs}
-          onClose={handleClose}
-          onCloseGroup={handleCloseGroup}
-        />
-      );
-    }
-
-    return <TabList tabs={tabs} onClose={handleClose} />;
   };
 
   return (
@@ -229,25 +203,13 @@ function App() {
         )}
 
         {/* Content Area */}
-        <div className="relative">
-          {isConnected ? (
-            renderCurrentView()
-          ) : (
-            <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="text-lg font-medium text-blue-900 mb-2">
-                Getting Started
-              </h3>
-              <ol className="list-decimal list-inside space-y-2 text-blue-800">
-                <li>Install the Tab Dashboard Chrome extension</li>
-                <li>Make sure this page is open at http://localhost:3002</li>
-                <li>
-                  The extension will automatically connect and start sending tab
-                  data
-                </li>
-              </ol>
-            </div>
-          )}
-        </div>
+        <TabsContent
+          tabs={tabs}
+          currentMode={currentMode}
+          handleClose={handleClose}
+          handleCloseGroup={handleCloseGroup}
+          isConnected={isConnected}
+        />
       </div>
 
       <Notification notification={notification} onUndo={handleUndo} />
