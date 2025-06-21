@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { supabase } from "../../common/auth";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeMinimal } from "@supabase/auth-ui-shared";
 
 export const AuthPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+      <div className="max-w-lg w-full">
         {/* Back Button */}
         <div className="mb-6">
           <Link
@@ -68,9 +71,15 @@ export const AuthPage = () => {
 
               {/* Form content will go here */}
               <div className="min-h-[200px] flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
-                <p className="text-gray-400 text-sm">
+                <Auth
+                  supabaseClient={supabase}
+                  appearance={{ theme: ThemeMinimal }}
+                  providers={["google", "github"]}
+                />
+
+                {/* <p className="text-gray-400 text-sm">
                   Authentication form will be added here
-                </p>
+                </p> */}
               </div>
             </div>
 
