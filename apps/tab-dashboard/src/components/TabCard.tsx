@@ -16,7 +16,7 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
     window.dispatchEvent(
       new CustomEvent("dashboardMessage", {
         detail: { type: "SWITCH_TO_TAB", tabId: tab.id },
-      })
+      }),
     );
   };
 

@@ -43,7 +43,7 @@ chrome.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(() => {
       console.log("Dashboard bridge disconnected");
       dashboardConnections = dashboardConnections.filter(
-        (conn) => conn !== port
+        (conn) => conn !== port,
       );
     });
 
@@ -163,7 +163,7 @@ async function sendTabsToConnectedDashboards() {
         console.error("Error sending message to dashboard:", error);
         // Remove invalid connections
         dashboardConnections = dashboardConnections.filter(
-          (conn) => conn !== port
+          (conn) => conn !== port,
         );
       }
     });
@@ -229,7 +229,7 @@ async function handleSwitchToTab(tabId: number) {
 }
 
 async function handleRestoreTabs(
-  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>
+  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>,
 ) {
   try {
     for (const tabData of tabsToRestore) {

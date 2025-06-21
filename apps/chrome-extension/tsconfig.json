@@ -2,6 +2,7 @@
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "types": ["chrome", "node"],
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,

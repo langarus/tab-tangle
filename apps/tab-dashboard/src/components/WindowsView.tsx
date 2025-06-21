@@ -58,8 +58,9 @@ export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
       }
     }
     // If all names are used, append a number
-    const base = japaneseDishes[parseInt(windowId, 10) % japaneseDishes.length];
-    nameCounts[base] = (nameCounts[base] || 1) + 1;
+    const base =
+      japaneseDishes[parseInt(windowId, 10) % japaneseDishes.length] || "";
+    nameCounts[base] = (nameCounts[base] ?? 1) + 1;
     const uniqueName = `${base} ${nameCounts[base]}`;
     windowNames[windowId] = uniqueName;
     return uniqueName;
@@ -69,10 +70,10 @@ export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
     (acc, tab) => {
       const windowId = tab.windowId;
       if (windowId && !acc[windowId]) acc[windowId] = [];
-      if (windowId) acc[windowId].push(tab);
+      if (windowId) acc?.[windowId]?.push(tab);
       return acc;
     },
-    {} as Record<number, TabInfo[]>
+    {} as Record<number, TabInfo[]>,
   );
 
   return (

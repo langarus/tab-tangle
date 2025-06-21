@@ -21,7 +21,7 @@ if (window.location.href.includes("localhost:3002")) {
               timestamp: message.timestamp,
             },
           },
-        })
+        }),
       );
     }
   });
@@ -60,7 +60,7 @@ if (window.location.href.includes("localhost:3002")) {
         type: "EXTENSION_CONNECTED",
         data: { connected: true },
       },
-    })
+    }),
   );
 }
 

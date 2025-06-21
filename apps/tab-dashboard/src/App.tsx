@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TabInfo, ViewMode, NotificationState } from "./types";
 import { ModeSelector } from "./components/ModeSelector";
 import TabList from "./components/TabList";
@@ -6,19 +6,13 @@ import { WindowsView } from "./components/WindowsView";
 import { DomainsView } from "./components/DomainsView";
 import { Notification } from "./components/Notification";
 
-// Get extension ID from URL parameters or detect it
-const getExtensionId = (): string | null => {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("extensionId");
-};
-
 function App() {
   const [tabs, setTabs] = useState<TabInfo[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [currentMode, setCurrentMode] = useState<ViewMode>("all");
   const [notification, setNotification] = useState<NotificationState | null>(
-    null
+    null,
   );
   const notificationTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -49,7 +43,7 @@ function App() {
     // Listen for custom events from the extension
     window.addEventListener(
       "extensionMessage",
-      handleExtensionMessage as EventListener
+      handleExtensionMessage as EventListener,
     );
 
     // Request initial tabs data
@@ -57,7 +51,7 @@ function App() {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "REQUEST_TABS" },
-        })
+        }),
       );
     };
 
@@ -72,7 +66,7 @@ function App() {
     return () => {
       window.removeEventListener(
         "extensionMessage",
-        handleExtensionMessage as EventListener
+        handleExtensionMessage as EventListener,
       );
       clearInterval(interval);
     };
@@ -96,14 +90,11 @@ function App() {
 
     const tab = tabs.find((t) => t.id === tabId);
     if (tab) {
-      // Optimistically remove the tab from local state for immediate UI feedback
-      setTabs((prevTabs) => prevTabs.filter((t) => t.id !== tabId));
-
       // Send close request to extension
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TAB", tabId },
-        })
+        }),
       );
       showNotification([tab]);
     }
@@ -123,7 +114,7 @@ function App() {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TABS", tabIds },
-        })
+        }),
       );
       showNotification(tabsToClose);
     }
@@ -143,7 +134,7 @@ function App() {
     window.dispatchEvent(
       new CustomEvent("dashboardMessage", {
         detail: { type: "RESTORE_TABS", tabs: tabsToRestore },
-      })
+      }),
     );
 
     setNotification(null);
