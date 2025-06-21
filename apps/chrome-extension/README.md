@@ -28,7 +28,7 @@ This will build the extension and watch for changes in development mode.
 
 ### Usage
 
-1. Make sure the Tab Dashboard app is running on `http://localhost:3002`
+1. Make sure the Tab Dashboard app is running on `https://tab-tangle.web.app`
 2. Open the dashboard in a Chrome tab
 3. The extension will automatically connect and start sending live tab updates
 4. Click the extension icon to view connection status

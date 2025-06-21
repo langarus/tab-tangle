@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabCountEl = document.getElementById("tabCount") as HTMLElement;
   const sendTabsBtn = document.getElementById("sendTabs") as HTMLButtonElement;
   const openDashboardBtn = document.getElementById(
-    "openDashboard",
+    "openDashboard"
   ) as HTMLButtonElement;
 
   // Check dashboard connection status
@@ -31,13 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
           statusEl.textContent = "Failed to send tabs";
           statusEl.className = "status disconnected";
         }
-      },
+      }
     );
   });
 
   // Open dashboard
   openDashboardBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: "http://localhost:3002" });
+    chrome.tabs.create({ url: "https://tab-tangle.web.app" });
   });
 });
 

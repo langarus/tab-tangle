@@ -49,7 +49,7 @@ export const TabsContent = ({
           </h3>
           <ol className="list-decimal list-inside space-y-2 text-blue-800">
             <li>Install the Tab Dashboard Chrome extension</li>
-            <li>Make sure this page is open at http://localhost:3002</li>
+            <li>Make sure this page is open at https://tab-tangle.web.app/</li>
             <li>
               The extension will automatically connect and start sending tab
               data

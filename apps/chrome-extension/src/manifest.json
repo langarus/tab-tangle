@@ -5,7 +5,7 @@
   "description": "Sends open tab information to dashboard",
   "permissions": ["activeTab", "tabs", "storage"],
   "externally_connectable": {
-    "matches": ["http://localhost:3002/*"]
+    "matches": ["https://tab-tangle.web.app/*"]
   },
   "background": {
     "service_worker": "background.js"
