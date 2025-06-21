@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Package Management Rule
+
+**Always use pnpm for all package management commands** - never npm or yarn.
+
+This is a pnpm monorepo with workspaces defined in [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml).
+
+Configuration files: [pnpm-lock.yaml](mdc:pnpm-lock.yaml) | [package.json](mdc:package.json)
