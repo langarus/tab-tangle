@@ -7,8 +7,6 @@ export interface TabInfo {
   windowId: number;
 }
 
-export type ViewMode = "all" | "windows" | "domains";
-
 export interface NotificationState {
   tabs: TabInfo[];
   visible: boolean;

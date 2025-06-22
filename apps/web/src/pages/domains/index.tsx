@@ -1,14 +1,9 @@
-import React from "react";
-import { TabInfo } from "../types";
-import { TabCard } from "./TabCard";
+import { TabInfo } from "../../types";
+import { TabCard } from "../../components/TabCard";
+import { useGeneralCtx } from "../../common/general";
 
-interface DomainsViewProps {
-  tabs: TabInfo[];
-  onClose: (tabId: number, e: React.MouseEvent) => void;
-  onCloseGroup: (tabsToClose: TabInfo[], e: React.MouseEvent) => void;
-}
-
-export function DomainsView({ tabs, onClose, onCloseGroup }: DomainsViewProps) {
+export function Domains() {
+  const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
   const groupedTabs = tabs.reduce(
     (acc, tab) => {
       if (!tab.url) return acc;
@@ -24,7 +19,7 @@ export function DomainsView({ tabs, onClose, onCloseGroup }: DomainsViewProps) {
       }
       return acc;
     },
-    {} as Record<string, TabInfo[]>,
+    {} as Record<string, TabInfo[]>
   );
 
   // Get favicon URL for domain
@@ -84,7 +79,7 @@ export function DomainsView({ tabs, onClose, onCloseGroup }: DomainsViewProps) {
               </div>
               <button
                 title="Close all tabs in this domain"
-                onClick={(e) => onCloseGroup(domainTabs, e)}
+                onClick={(e) => handleCloseGroup(domainTabs, e)}
                 className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm"
               >
                 <svg
@@ -107,7 +102,7 @@ export function DomainsView({ tabs, onClose, onCloseGroup }: DomainsViewProps) {
             <div className="flex flex-col gap-4">
               {domainTabs.map((tab) => (
                 <div key={tab.id} className="animate-fade-in w-full">
-                  <TabCard tab={tab} onClose={onClose} />
+                  <TabCard tab={tab} onClose={handleClose} />
                 </div>
               ))}
             </div>

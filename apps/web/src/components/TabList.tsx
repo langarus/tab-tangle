@@ -1,13 +1,8 @@
-import React from "react";
-import { TabInfo } from "../types";
+import { useGeneralCtx } from "../common/general";
 import { TabCard } from "./TabCard";
 
-interface TabListProps {
-  tabs: TabInfo[];
-  onClose?: (tabId: number, e: React.MouseEvent) => void;
-}
-
-function TabList({ tabs, onClose }: TabListProps) {
+function TabList() {
+  const { tabs, handleClose } = useGeneralCtx();
   if (tabs.length === 0) {
     return (
       <div className="text-center py-12">
@@ -24,7 +19,7 @@ function TabList({ tabs, onClose }: TabListProps) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {tabs.map((tab) => (
         <div key={tab.id} className="animate-fade-in">
-          <TabCard tab={tab} onClose={onClose || (() => {})} />
+          <TabCard tab={tab} onClose={handleClose} />
         </div>
       ))}
     </div>

@@ -6,15 +6,23 @@ import {
   createRootRoute,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import App from "../App";
 import { AuthPage } from "../pages/auth";
 import { BoardPage } from "../pages/board";
+import { GeneralProvider } from "./general";
+import { Layout } from "../components/Layout";
+import { Domains } from "../pages/domains";
+import { Windows } from "../pages/windows";
+import TabList from "../components/TabList";
 
 const rootRoute = createRootRoute({
   component: () => (
     <>
-      <Outlet />
-      <TanStackRouterDevtools />
+      <GeneralProvider>
+        <Layout>
+          <Outlet />
+        </Layout>
+        <TanStackRouterDevtools />
+      </GeneralProvider>
     </>
   ),
 });
@@ -22,7 +30,19 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: App,
+  component: TabList,
+});
+
+const domainsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/domains",
+  component: Domains,
+});
+
+const windowsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/windows",
+  component: Windows,
 });
 
 const authRoute = createRoute({
@@ -37,7 +57,13 @@ const boardRoute = createRoute({
   component: BoardPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, boardRoute]);
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  authRoute,
+  boardRoute,
+  domainsRoute,
+  windowsRoute,
+]);
 
 const router = createRouter({ routeTree });
 

@@ -3,7 +3,7 @@ import "@excalidraw/excalidraw/index.css";
 
 export const BoardPage = () => {
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div style={{ height: "80vh", width: "100%" }}>
       <Excalidraw
         initialData={{
           elements: [],

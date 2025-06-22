@@ -1,12 +1,6 @@
-import React from "react";
-import { TabInfo } from "../types";
-import { TabCard } from "./TabCard";
-
-interface WindowsViewProps {
-  tabs: TabInfo[];
-  onClose: (tabId: number, e: React.MouseEvent) => void;
-  onCloseGroup: (tabsToClose: TabInfo[], e: React.MouseEvent) => void;
-}
+import { TabInfo } from "../../types";
+import { TabCard } from "../../components/TabCard";
+import { useGeneralCtx } from "../../common/general";
 
 // List of fun Japanese dish names
 const japaneseDishes = [
@@ -42,7 +36,8 @@ const japaneseDishes = [
   "Menchi Katsu",
 ];
 
-export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
+export function Windows() {
+  const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
   // Keep a mapping of windowId to generated name
   const windowNames: Record<string, string> = {};
   const usedNames = new Set<string>();
@@ -73,7 +68,7 @@ export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
       if (windowId) acc?.[windowId]?.push(tab);
       return acc;
     },
-    {} as Record<number, TabInfo[]>,
+    {} as Record<number, TabInfo[]>
   );
 
   return (
@@ -118,7 +113,7 @@ export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
                 </div>
                 <button
                   title="Close all tabs in this window"
-                  onClick={(e) => onCloseGroup(windowTabs, e)}
+                  onClick={(e) => handleCloseGroup(windowTabs, e)}
                   className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm"
                 >
                   <svg
@@ -141,7 +136,7 @@ export function WindowsView({ tabs, onClose, onCloseGroup }: WindowsViewProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-fr">
                 {windowTabs.map((tab) => (
                   <div key={tab.id} className="animate-fade-in">
-                    <TabCard tab={tab} onClose={onClose} />
+                    <TabCard tab={tab} onClose={handleClose} />
                   </div>
                 ))}
               </div>
