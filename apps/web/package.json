@@ -12,6 +12,7 @@
     "deploy": "pnpm run build && firebase deploy"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
     "@tanstack/react-router": "^1.121.27",
     "@tanstack/react-router-devtools": "^1.121.27",
     "firebase": "^11.9.1",
