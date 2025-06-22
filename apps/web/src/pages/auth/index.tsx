@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { supabase } from "../../common/auth";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeMinimal } from "@supabase/auth-ui-shared";
+import { FirebaseAuth } from "../../components/FirebaseAuth";
 
 export const AuthPage = () => {
   return (
@@ -69,17 +67,9 @@ export const AuthPage = () => {
                 </p>
               </div>
 
-              {/* Form content will go here */}
-              <div className="min-h-[200px] flex items-center justify-center border-2 border-dashed border-gray-200 rounded-lg">
-                <Auth
-                  supabaseClient={supabase}
-                  appearance={{ theme: ThemeMinimal }}
-                  providers={["google", "github"]}
-                />
-
-                {/* <p className="text-gray-400 text-sm">
-                  Authentication form will be added here
-                </p> */}
+              {/* Firebase Auth Component */}
+              <div className="min-h-[200px] flex items-center justify-center">
+                <FirebaseAuth />
               </div>
             </div>
 

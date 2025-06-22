@@ -1,4 +1,4 @@
-import { createClient, Session } from "@supabase/supabase-js";
+import { User, onAuthStateChanged } from "firebase/auth";
 import {
   createContext,
   PropsWithChildren,
@@ -6,32 +6,30 @@ import {
   useEffect,
   useState,
 } from "react";
-
-export const supabase = createClient(
-  "https://tvebpombyrycqnatueeq.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2ZWJwb21ieXJ5Y3FuYXR1ZWVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MTczMDEsImV4cCI6MjA2NjA5MzMwMX0.jaHzfMQwZAjvkotbQBzrU6lgwCAqHVU0hnLguISb22k"
-);
+import { auth } from "../config/firebase";
 
 const AuthContext = createContext({
-  session: null as Session | null,
+  user: null as User | null,
+  loading: true,
 });
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
     });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
+
+    return () => unsubscribe();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
