@@ -1,10 +1,18 @@
 import { PropsWithChildren } from "react";
 import { useGeneralCtx } from "../common/general";
 import { ModeSelector } from "./ModeSelector";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Layout = ({ children }: PropsWithChildren) => {
-  const { tabs, isConnected, lastUpdate } = useGeneralCtx();
+  const { tabs, isConnected, lastUpdate, selectedTabs, isSelectMode } =
+    useGeneralCtx();
+  const navigate = useNavigate();
+
+  const handleAddToBoard = () => {
+    // Navigate to board page with selected tabs
+    navigate({ to: "/board" });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
@@ -82,6 +90,31 @@ export const Layout = ({ children }: PropsWithChildren) => {
           children
         )}
       </div>
+
+      {/* Floating "Add to Board" button - only shows in select mode */}
+      {isSelectMode && (
+        <div className="fixed bottom-8 right-8 z-50">
+          <button
+            onClick={handleAddToBoard}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 font-semibold transform hover:scale-105"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add to Board ({selectedTabs.length})
+          </button>
+        </div>
+      )}
     </div>
   );
 };

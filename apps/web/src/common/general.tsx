@@ -155,14 +155,36 @@ const useGeneral = () => {
   };
 };
 
-type GeneralContextType = ReturnType<typeof useGeneral>;
+const useSelectTabs = () => {
+  const [selectedTabs, setSelectedTabs] = useState<TabInfo[]>([]);
+
+  const handleSelectTabs = (tabs: TabInfo[]) => {
+    setSelectedTabs((prev) => [...prev, ...tabs]);
+  };
+
+  const handleDeselectTabs = (tabs: TabInfo[]) => {
+    setSelectedTabs((prev) =>
+      [...prev].filter((t) => !tabs.map((t) => t.id).includes(t.id))
+    );
+  };
+  const isSelectMode = selectedTabs.length > 0;
+
+  return { selectedTabs, handleSelectTabs, handleDeselectTabs, isSelectMode };
+};
+
+type GeneralContextType = ReturnType<typeof useGeneral> &
+  ReturnType<typeof useSelectTabs>;
 
 const GeneralContext = createContext({} as GeneralContextType);
 
 const GeneralProvider = ({ children }: PropsWithChildren) => {
-  const value = useGeneral();
+  const generalState = useGeneral();
+  const selectTabsState = useSelectTabs();
+
   return (
-    <GeneralContext.Provider value={value}>{children}</GeneralContext.Provider>
+    <GeneralContext.Provider value={{ ...generalState, ...selectTabsState }}>
+      {children}
+    </GeneralContext.Provider>
   );
 };
 
