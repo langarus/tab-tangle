@@ -1,66 +1,199 @@
 // Popup script for Chrome extension
+interface TabInfo {
+  id?: number;
+  title?: string;
+  url?: string;
+  favIconUrl?: string;
+  active: boolean;
+  windowId: number;
+}
+
+let allTabs: TabInfo[] = [];
+
 document.addEventListener("DOMContentLoaded", () => {
-  const statusEl = document.getElementById("status") as HTMLElement;
-  const tabCountEl = document.getElementById("tabCount") as HTMLElement;
-  const sendTabsBtn = document.getElementById("sendTabs") as HTMLButtonElement;
   const openDashboardBtn = document.getElementById(
     "openDashboard"
   ) as HTMLButtonElement;
+  const tabSearchInput = document.getElementById(
+    "tabSearch"
+  ) as HTMLInputElement;
+  const searchResults = document.getElementById("searchResults") as HTMLElement;
+  const closeAllBtn = document.getElementById(
+    "closeAllMatching"
+  ) as HTMLButtonElement;
 
-  // Check dashboard connection status
-  checkDashboardConnection();
-
-  // Get current tab count
+  // Get current tab count and all tabs
   updateTabCount();
-
-  // Send tabs to dashboard
-  sendTabsBtn.addEventListener("click", () => {
-    sendTabsBtn.disabled = true;
-    sendTabsBtn.textContent = "Sending...";
-
-    chrome.runtime.sendMessage(
-      { type: "SEND_TABS_TO_DASHBOARD" },
-      (response) => {
-        sendTabsBtn.disabled = false;
-        sendTabsBtn.textContent = "Send Tabs to Dashboard";
-
-        if (response?.success) {
-          statusEl.textContent = "Tabs sent successfully!";
-          statusEl.className = "status connected";
-        } else {
-          statusEl.textContent = "Failed to send tabs";
-          statusEl.className = "status disconnected";
-        }
-      }
-    );
-  });
 
   // Open dashboard
   openDashboardBtn.addEventListener("click", () => {
     chrome.tabs.create({ url: "https://tab-tangle.web.app" });
   });
+
+  // Search functionality
+  tabSearchInput.addEventListener("input", (e) => {
+    const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    if (query.length === 0) {
+      searchResults.innerHTML = "";
+      closeAllBtn.style.display = "none";
+      return;
+    }
+
+    searchTabs(query);
+  });
+
+  // Close all functionality
+  closeAllBtn.addEventListener("click", () => {
+    const query = tabSearchInput.value.toLowerCase().trim();
+    if (query.length === 0) return;
+
+    const matchingTabs = allTabs.filter((tab) => {
+      const title = (tab.title || "").toLowerCase();
+      const url = (tab.url || "").toLowerCase();
+      return title.includes(query) || url.includes(query);
+    });
+
+    const tabIds = matchingTabs
+      .map((tab) => tab.id)
+      .filter((id) => id !== undefined) as number[];
+
+    console.log("Close all clicked - Query:", query);
+    console.log("Matching tabs:", matchingTabs);
+    console.log("Tab IDs to close:", tabIds);
+
+    if (tabIds.length > 0) {
+      chrome.runtime.sendMessage(
+        {
+          type: "CLOSE_TABS",
+          tabIds: tabIds,
+        },
+        (response) => {
+          console.log("Close tabs response:", response);
+          // Clear search and refresh
+          tabSearchInput.value = "";
+          searchResults.innerHTML = "";
+          closeAllBtn.style.display = "none";
+          updateTabCount();
+        }
+      );
+    } else {
+      console.log("No valid tab IDs to close");
+    }
+  });
 });
 
-async function checkDashboardConnection() {
-  const statusEl = document.getElementById("status") as HTMLElement;
+function updateTabCount(callback?: () => void) {
+  const tabCountEl = document.getElementById("tabCount") as HTMLElement;
 
-  // Check if extension has active connections to dashboard
-  chrome.runtime.sendMessage({ type: "GET_CONNECTION_STATUS" }, (response) => {
-    if (response?.connected) {
-      statusEl.textContent = "Connected to Dashboard";
-      statusEl.className = "status connected";
-    } else {
-      statusEl.textContent = "Dashboard not connected";
-      statusEl.className = "status disconnected";
+  chrome.runtime.sendMessage({ type: "GET_TABS" }, (response) => {
+    allTabs = response?.tabs || [];
+    const tabCount = allTabs.length;
+    tabCountEl.textContent = `Tabs: ${tabCount}`;
+
+    // Call the callback after updating the tab data
+    if (callback) {
+      callback();
     }
   });
 }
 
-function updateTabCount() {
-  const tabCountEl = document.getElementById("tabCount") as HTMLElement;
+function searchTabs(query: string) {
+  const searchResults = document.getElementById("searchResults") as HTMLElement;
+  const closeAllBtn = document.getElementById(
+    "closeAllMatching"
+  ) as HTMLButtonElement;
 
-  chrome.runtime.sendMessage({ type: "GET_TABS" }, (response) => {
-    const tabCount = response?.tabs?.length || 0;
-    tabCountEl.textContent = `Tabs: ${tabCount}`;
+  // Filter tabs based on title and URL
+  const matchingTabs = allTabs.filter((tab) => {
+    const title = (tab.title || "").toLowerCase();
+    const url = (tab.url || "").toLowerCase();
+    return title.includes(query) || url.includes(query);
+  });
+
+  if (matchingTabs.length === 0) {
+    searchResults.innerHTML =
+      '<div class="search-result-item">No matching tabs found</div>';
+    closeAllBtn.style.display = "none";
+    return;
+  }
+
+  // Display matching tabs
+  const resultsHTML = matchingTabs
+    .map((tab) => {
+      const favicon =
+        tab.favIconUrl ||
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌐</text></svg>";
+      const title = tab.title || "Untitled";
+      const url = tab.url || "";
+      const domain = url ? new URL(url).hostname : "";
+
+      return `
+        <div class="search-result-item" data-tab-id="${tab.id}">
+          <img src="${favicon}" class="tab-favicon" alt="favicon" />
+          <div class="tab-info">
+            <div class="tab-title">${title}</div>
+            <div class="tab-url">${domain}</div>
+          </div>
+          <button class="tab-close-btn" data-tab-id="${tab.id}" title="Close tab">×</button>
+        </div>
+      `;
+    })
+    .join("");
+
+  searchResults.innerHTML = resultsHTML;
+
+  // Show and update close all button
+  closeAllBtn.textContent = `Close All (${matchingTabs.length})`;
+  closeAllBtn.style.display = "block";
+
+  // Add click handlers for individual tabs and close buttons
+  matchingTabs.forEach((tab) => {
+    const tabElement = document.querySelector(
+      `[data-tab-id="${tab.id}"].search-result-item`
+    );
+    const closeBtn = document.querySelector(
+      `.tab-close-btn[data-tab-id="${tab.id}"]`
+    );
+
+    if (tabElement) {
+      tabElement.addEventListener("click", (e) => {
+        // Don't trigger if clicking on the close button
+        if ((e.target as Element).classList.contains("tab-close-btn")) {
+          return;
+        }
+
+        // For now, clicking on the tab item will switch to it instead of closing
+        chrome.runtime.sendMessage(
+          {
+            type: "SWITCH_TO_TAB",
+            tabId: tab.id,
+          },
+          (response) => {
+            console.log("Switch to tab response:", response);
+            // Close the popup after switching
+            window.close();
+          }
+        );
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent triggering the tab click
+        chrome.runtime.sendMessage(
+          {
+            type: "CLOSE_TAB",
+            tabId: tab.id,
+          },
+          (response) => {
+            console.log("Individual tab close response:", response);
+            // Update the tab count and refresh allTabs data, then refresh search
+            updateTabCount(() => {
+              searchTabs(query);
+            });
+          }
+        );
+      });
+    }
   });
 }

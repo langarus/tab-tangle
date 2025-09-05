@@ -15,22 +15,6 @@
         text-align: center;
         margin-bottom: 16px;
       }
-      .status {
-        padding: 8px;
-        border-radius: 4px;
-        margin-bottom: 12px;
-        text-align: center;
-      }
-      .status.connected {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-      .status.disconnected {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
       .tab-count {
         text-align: center;
         font-size: 14px;
@@ -50,18 +34,129 @@
       button:hover {
         background-color: #0056b3;
       }
+      .search-section {
+        margin-bottom: 16px;
+      }
+      .search-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      .search-results {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+      }
+      .search-result-item {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        position: relative;
+      }
+      .search-result-item:hover {
+        background-color: #f5f5f5;
+      }
+      .search-result-item:last-child {
+        border-bottom: none;
+      }
+      .tab-favicon {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+      .tab-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .tab-title {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tab-url {
+        color: #666;
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .close-all-btn {
+        background-color: #dc3545;
+        font-size: 12px;
+        padding: 6px 12px;
+        margin-top: 8px;
+      }
+      .close-all-btn:hover {
+        background-color: #c82333;
+      }
+      .close-all-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+      .tab-close-btn {
+        display: none;
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(108, 117, 125, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition:
+          opacity 0.2s ease,
+          background-color 0.2s ease;
+      }
+      .search-result-item:hover .tab-close-btn {
+        display: flex;
+        opacity: 1;
+      }
+      .tab-close-btn:hover {
+        background-color: #dc3545;
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
     <div class="header">
-      <h3>Tab Dashboard</h3>
+      <h3>Tab Tangle</h3>
     </div>
-
-    <div id="status" class="status disconnected">Checking connection...</div>
 
     <div id="tabCount" class="tab-count">Tabs: 0</div>
 
-    <button id="sendTabs">Send Tabs to Dashboard</button>
+    <div class="search-section">
+      <input
+        type="text"
+        id="tabSearch"
+        placeholder="Search tabs..."
+        class="search-input"
+      />
+      <div id="searchResults" class="search-results"></div>
+      <button id="closeAllMatching" class="close-all-btn" style="display: none">
+        Close All
+      </button>
+    </div>
+
     <button id="openDashboard">Open Dashboard</button>
 
     <script src="popup.js"></script>

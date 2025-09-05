@@ -43,7 +43,7 @@ chrome.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(() => {
       console.log("Dashboard bridge disconnected");
       dashboardConnections = dashboardConnections.filter(
-        (conn) => conn !== port,
+        (conn) => conn !== port
       );
     });
 
@@ -87,6 +87,45 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.type === "GET_CONNECTION_STATUS") {
     sendResponse({ connected: dashboardConnections.length > 0 });
+    return true;
+  }
+
+  if (message.type === "CLOSE_TAB") {
+    console.log("Popup requested to close tab:", message.tabId);
+    handleCloseTab(message.tabId)
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((error) => {
+        console.error("Error closing tab:", error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+
+  if (message.type === "CLOSE_TABS") {
+    console.log("Popup requested to close tabs:", message.tabIds);
+    handleCloseTabs(message.tabIds)
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((error) => {
+        console.error("Error closing tabs:", error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true;
+  }
+
+  if (message.type === "SWITCH_TO_TAB") {
+    console.log("Popup requested to switch to tab:", message.tabId);
+    handleSwitchToTab(message.tabId)
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((error) => {
+        console.error("Error switching to tab:", error);
+        sendResponse({ success: false, error: error.message });
+      });
     return true;
   }
 });
@@ -163,7 +202,7 @@ async function sendTabsToConnectedDashboards() {
         console.error("Error sending message to dashboard:", error);
         // Remove invalid connections
         dashboardConnections = dashboardConnections.filter(
-          (conn) => conn !== port,
+          (conn) => conn !== port
         );
       }
     });
@@ -229,7 +268,7 @@ async function handleSwitchToTab(tabId: number) {
 }
 
 async function handleRestoreTabs(
-  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>,
+  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>
 ) {
   try {
     for (const tabData of tabsToRestore) {
