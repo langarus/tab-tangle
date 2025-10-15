@@ -1,23 +1,21 @@
 import { PropsWithChildren } from "react";
 import { useGeneralCtx } from "../common/general";
 import { ModeSelector } from "./ModeSelector";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const {
     tabs,
     isConnected,
-    lastUpdate,
     selectedTabs,
     isSelectMode,
     handleCloseGroup,
     resetSelection,
   } = useGeneralCtx();
-  const navigate = useNavigate();
 
   const handleCloseAll = () => {
     // Close all selected tabs
-    handleCloseGroup(selectedTabs, new MouseEvent("click"));
+    handleCloseGroup(selectedTabs, {} as React.MouseEvent);
     // Reset selection after closing
     resetSelection();
   };
