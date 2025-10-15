@@ -37,8 +37,8 @@ export function Domains() {
         >
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center overflow-hidden">
+              <div className="flex items-center space-x-3 min-w-0 flex-1">
+                <div className="h-10 w-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                   {getFaviconUrl(domain) ? (
                     <img
                       src={getFaviconUrl(domain)!}
@@ -67,8 +67,11 @@ export function Domains() {
                     />
                   </svg>
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                <div className="min-w-0 flex-1">
+                  <h2
+                    className="text-lg font-semibold text-gray-900 truncate"
+                    title={domain}
+                  >
                     {domain}
                   </h2>
                   <p className="text-sm text-gray-600">
@@ -80,7 +83,7 @@ export function Domains() {
               <button
                 title="Close all tabs in this domain"
                 onClick={(e) => handleCloseGroup(domainTabs, e)}
-                className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm"
+                className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm flex-shrink-0 ml-2"
               >
                 <svg
                   className="h-4 w-4"
