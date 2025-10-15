@@ -5,6 +5,7 @@ export interface TabInfo {
   favIconUrl?: string;
   active: boolean;
   windowId: number;
+  lastAccessed?: number;
 }
 
 export interface NotificationState {

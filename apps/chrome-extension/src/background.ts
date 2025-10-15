@@ -8,6 +8,7 @@ interface TabInfo {
   favIconUrl?: string;
   active: boolean;
   windowId: number;
+  lastAccessed?: number;
 }
 
 // Store active connections to dashboard
@@ -174,6 +175,7 @@ async function getAllTabs(): Promise<TabInfo[]> {
       favIconUrl: tab.favIconUrl,
       active: tab.active,
       windowId: tab.windowId,
+      lastAccessed: tab.lastAccessed,
     }));
   } catch (error) {
     console.error("Error getting tabs:", error);

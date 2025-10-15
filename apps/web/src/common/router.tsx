@@ -12,7 +12,7 @@ import { GeneralProvider } from "./general";
 import { Layout } from "../components/Layout";
 import { Domains } from "../pages/domains";
 import { Windows } from "../pages/windows";
-import TabList from "../components/TabList";
+import ChronologicalTabs from "../components/ChronologicalTabs";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -30,7 +30,7 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: TabList,
+  component: ChronologicalTabs,
 });
 
 const domainsRoute = createRoute({
