@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Tab Tangle",
   "version": "1.0.0",
-  "description": "Tame your tabs1",
+  "description": "Tame your tabs",
   "permissions": ["activeTab", "tabs", "storage"],
   "externally_connectable": {
     "matches": [
