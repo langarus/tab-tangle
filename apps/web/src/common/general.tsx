@@ -85,10 +85,45 @@ const useGeneral = () => {
   };
 
   // Handle closing individual tabs
-  const handleClose = (tabId: number, e: React.MouseEvent) => {
+  const handleClose = (
+    tabId: number,
+    e: React.MouseEvent,
+    selectedTabs?: TabInfo[],
+    isSelectMode?: boolean,
+    resetSelection?: () => void
+  ) => {
     e.preventDefault();
     e.stopPropagation();
 
+    // If in select mode, close all selected tabs and reset selection
+    if (
+      isSelectMode &&
+      selectedTabs &&
+      selectedTabs.length > 0 &&
+      resetSelection
+    ) {
+      const tabIds = selectedTabs
+        .map((tab) => tab.id)
+        .filter(Boolean) as number[];
+      if (tabIds.length > 0) {
+        // Optimistically remove the tabs from local state for immediate UI feedback
+        setTabs((prevTabs) => prevTabs.filter((t) => !tabIds.includes(t.id!)));
+
+        // Send close group request to extension
+        window.dispatchEvent(
+          new CustomEvent("dashboardMessage", {
+            detail: { type: "CLOSE_TABS", tabIds },
+          })
+        );
+        showNotification(selectedTabs);
+
+        // Reset selection
+        resetSelection();
+      }
+      return;
+    }
+
+    // Normal mode - close individual tab
     const tab = tabs.find((t) => t.id === tabId);
     if (tab) {
       // Send close request to extension
@@ -167,9 +202,20 @@ const useSelectTabs = () => {
       [...prev].filter((t) => !tabs.map((t) => t.id).includes(t.id))
     );
   };
+
+  const resetSelection = () => {
+    setSelectedTabs([]);
+  };
+
   const isSelectMode = selectedTabs.length > 0;
 
-  return { selectedTabs, handleSelectTabs, handleDeselectTabs, isSelectMode };
+  return {
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+    resetSelection,
+    isSelectMode,
+  };
 };
 
 type GeneralContextType = ReturnType<typeof useGeneral> &

@@ -4,13 +4,24 @@ import { useGeneralCtx } from "../common/general";
 
 interface TabCardProps {
   tab: TabInfo;
-  onClose: (tabId: number, e: React.MouseEvent) => void;
+  onClose: (
+    tabId: number,
+    e: React.MouseEvent,
+    selectedTabs?: TabInfo[],
+    isSelectMode?: boolean,
+    resetSelection?: () => void
+  ) => void;
   className?: string;
 }
 
 export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
-  const { selectedTabs, handleSelectTabs, handleDeselectTabs, isSelectMode } =
-    useGeneralCtx();
+  const {
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+    resetSelection,
+    isSelectMode,
+  } = useGeneralCtx();
 
   const isSelected = selectedTabs.some(
     (selectedTab) => selectedTab.id === tab.id
@@ -66,7 +77,10 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
     >
       {/* Close button */}
       <button
-        onClick={(e) => tab.id && onClose(tab.id, e)}
+        onClick={(e) =>
+          tab.id &&
+          onClose(tab.id, e, selectedTabs, isSelectMode, resetSelection)
+        }
         className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100/80 hover:bg-red-500 text-gray-500 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
         title="Close tab"
       >

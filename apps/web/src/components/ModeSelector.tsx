@@ -13,14 +13,14 @@ export function ModeSelector() {
     >
       Board
     </Link>
-  ) : (
-    <Link
-      to="/auth"
-      className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-violet-100 text-violet-700 shadow-sm hover:shadow-md hover:bg-violet-200 border border-violet-200 hover:border-violet-300"
-    >
-      Pro+
-    </Link>
-  );
+  ) : // TODO: Re-enable Pro+ feature in the future
+  // <Link
+  //   to="/auth"
+  //   className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-violet-100 text-violet-700 shadow-sm hover:shadow-md hover:bg-violet-200 border border-violet-200 hover:border-violet-300"
+  // >
+  //   Pro+
+  // </Link>
+  null;
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

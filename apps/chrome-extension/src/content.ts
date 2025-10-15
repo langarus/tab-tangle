@@ -4,6 +4,7 @@ console.log("Tab Dashboard Extension content script loaded");
 // Only run on dashboard pages
 if (
   window.location.href.includes("localhost:3002") ||
+  window.location.href.includes("tab-tangle.com") ||
   window.location.href.includes("tab-tangle.web.app")
 ) {
   console.log("Dashboard page detected, setting up communication bridge");

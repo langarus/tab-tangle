@@ -4,13 +4,22 @@ import { ModeSelector } from "./ModeSelector";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 export const Layout = ({ children }: PropsWithChildren) => {
-  const { tabs, isConnected, lastUpdate, selectedTabs, isSelectMode } =
-    useGeneralCtx();
+  const {
+    tabs,
+    isConnected,
+    lastUpdate,
+    selectedTabs,
+    isSelectMode,
+    handleCloseGroup,
+    resetSelection,
+  } = useGeneralCtx();
   const navigate = useNavigate();
 
-  const handleAddToBoard = () => {
-    // Navigate to board page with selected tabs
-    navigate({ to: "/board" });
+  const handleCloseAll = () => {
+    // Close all selected tabs
+    handleCloseGroup(selectedTabs, new MouseEvent("click"));
+    // Reset selection after closing
+    resetSelection();
   };
 
   return (
@@ -78,7 +87,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
             <ol className="list-decimal list-inside space-y-2 text-blue-800">
               <li>Install the Tab Dashboard Chrome extension</li>
               <li>
-                Make sure this page is open at https://tab-tangle.web.app/
+                Make sure this page is open at https://www.tab-tangle.com/
               </li>
               <li>
                 The extension will automatically connect and start sending tab
@@ -91,12 +100,12 @@ export const Layout = ({ children }: PropsWithChildren) => {
         )}
       </div>
 
-      {/* Floating "Add to Board" button - only shows in select mode */}
+      {/* Floating "Close All" button - only shows in select mode */}
       {isSelectMode && (
         <div className="fixed bottom-8 right-8 z-50">
           <button
-            onClick={handleAddToBoard}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 font-semibold transform hover:scale-105"
+            onClick={handleCloseAll}
+            className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 font-semibold transform hover:scale-105"
           >
             <svg
               className="h-5 w-5"
@@ -108,10 +117,10 @@ export const Layout = ({ children }: PropsWithChildren) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M12 4v16m8-8H4"
+                d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            Add to Board ({selectedTabs.length})
+            Close All ({selectedTabs.length})
           </button>
         </div>
       )}

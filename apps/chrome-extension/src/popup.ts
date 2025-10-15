@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open dashboard
   openDashboardBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: "https://tab-tangle.web.app" });
+    chrome.tabs.create({ url: "https://www.tab-tangle.com" });
   });
 
   // Search functionality
@@ -57,9 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((tab) => tab.id)
       .filter((id) => id !== undefined) as number[];
 
-    console.log("Close all clicked - Query:", query);
-    console.log("Matching tabs:", matchingTabs);
-    console.log("Tab IDs to close:", tabIds);
+    // console.log("Close all clicked - Query:", query);
+    // console.log("Matching tabs:", matchingTabs);
+    // console.log("Tab IDs to close:", tabIds);
 
     if (tabIds.length > 0) {
       chrome.runtime.sendMessage(
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
           tabIds: tabIds,
         },
         (response) => {
-          console.log("Close tabs response:", response);
+          // console.log("Close tabs response:", response);
           // Clear search and refresh
           tabSearchInput.value = "";
           searchResults.innerHTML = "";
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
     } else {
-      console.log("No valid tab IDs to close");
+      // console.log("No valid tab IDs to close");
     }
   });
 });
@@ -88,7 +88,7 @@ function updateTabCount(callback?: () => void) {
   chrome.runtime.sendMessage({ type: "GET_TABS" }, (response) => {
     allTabs = response?.tabs || [];
     const tabCount = allTabs.length;
-    tabCountEl.textContent = `Tabs: ${tabCount}`;
+    tabCountEl.textContent = `Open tabs: ${tabCount}`;
 
     // Call the callback after updating the tab data
     if (callback) {
@@ -169,7 +169,7 @@ function searchTabs(query: string) {
             tabId: tab.id,
           },
           (response) => {
-            console.log("Switch to tab response:", response);
+            // console.log("Switch to tab response:", response);
             // Close the popup after switching
             window.close();
           }
@@ -186,7 +186,7 @@ function searchTabs(query: string) {
             tabId: tab.id,
           },
           (response) => {
-            console.log("Individual tab close response:", response);
+            // console.log("Individual tab close response:", response);
             // Update the tab count and refresh allTabs data, then refresh search
             updateTabCount(() => {
               searchTabs(query);
