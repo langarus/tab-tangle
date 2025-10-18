@@ -31,7 +31,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
                 <img
                   src="/img/favicon.svg"
                   alt="Tab Tangle Logo"
-                  className="h-12 w-12"
+                  className="h-14 w-14"
                 />
                 {/* </div> */}
                 <div>

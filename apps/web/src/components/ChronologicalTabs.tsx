@@ -1,6 +1,10 @@
 import { TabInfo } from "../types";
 import { TabCard } from "./TabCard";
 import { useGeneralCtx } from "../common/general";
+import age1Url from "../assets/svg/age/age_1.svg?url";
+import age2Url from "../assets/svg/age/age_2.svg?url";
+import age3Url from "../assets/svg/age/age_3.svg?url";
+import age4Url from "../assets/svg/age/age_4.svg?url";
 
 interface TimeGroup {
   label: string;
@@ -8,6 +12,7 @@ interface TimeGroup {
   color: string;
   bgColor: string;
   borderColor: string;
+  iconUrl: string;
 }
 
 function ChronologicalTabs() {
@@ -40,6 +45,7 @@ function ChronologicalTabs() {
         color: "text-green-700",
         bgColor: "bg-green-50",
         borderColor: "border-green-200",
+        iconUrl: age1Url,
       },
       {
         label: "Today",
@@ -47,6 +53,7 @@ function ChronologicalTabs() {
         color: "text-blue-700",
         bgColor: "bg-blue-50",
         borderColor: "border-blue-200",
+        iconUrl: age2Url,
       },
       {
         label: "This Week",
@@ -54,6 +61,7 @@ function ChronologicalTabs() {
         color: "text-yellow-700",
         bgColor: "bg-yellow-50",
         borderColor: "border-yellow-200",
+        iconUrl: age3Url,
       },
       {
         label: "This Month",
@@ -61,6 +69,7 @@ function ChronologicalTabs() {
         color: "text-orange-700",
         bgColor: "bg-orange-50",
         borderColor: "border-orange-200",
+        iconUrl: age4Url,
       },
       {
         label: "Older",
@@ -68,6 +77,7 @@ function ChronologicalTabs() {
         color: "text-red-700",
         bgColor: "bg-red-50",
         borderColor: "border-red-200",
+        iconUrl: age4Url,
       },
     ];
 
@@ -132,23 +142,15 @@ function ChronologicalTabs() {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 min-w-0 flex-1">
-                <div
+                {/* <div
                   className={`h-8 w-8 ${group.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
-                >
-                  <svg
-                    className={`h-4 w-4 ${group.color}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
+                > */}
+                <img
+                  src={group.iconUrl}
+                  alt={`${group.label} icon`}
+                  className="h-10 w-10"
+                />
+                {/* </div> */}
                 <div className="min-w-0 flex-1">
                   <h2
                     className={`text-lg font-semibold ${group.color} truncate`}

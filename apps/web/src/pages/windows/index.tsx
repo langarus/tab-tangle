@@ -1,40 +1,49 @@
 import { TabInfo } from "../../types";
 import { TabCard } from "../../components/TabCard";
 import { useGeneralCtx } from "../../common/general";
+import g1Url from "../../assets/svg/general/g_1.svg?url";
+import g2Url from "../../assets/svg/general/g_2.svg?url";
+import g3Url from "../../assets/svg/general/g_3.svg?url";
+import g4Url from "../../assets/svg/general/g_4.svg?url";
+import g5Url from "../../assets/svg/general/g_5.svg?url";
+import g6Url from "../../assets/svg/general/g_6.svg?url";
 
-// List of fun Japanese dish names
-const japaneseDishes = [
-  "Sushi",
-  "Ramen",
-  "Okonomiyaki",
-  "Takoyaki",
-  "Katsudon",
-  "Tempura",
-  "Udon",
-  "Soba",
-  "Onigiri",
-  "Yakitori",
-  "Tonkatsu",
-  "Karaage",
-  "Gyoza",
-  "Shabu-shabu",
-  "Sukiyaki",
-  "Mochi",
-  "Taiyaki",
-  "Dorayaki",
-  "Chawanmushi",
-  "Unagi",
-  "Donburi",
-  "Miso Soup",
-  "Nikujaga",
-  "Oden",
-  "Yakiniku",
-  "Zosui",
-  "Omurice",
-  "Tamagoyaki",
-  "Korokke",
-  "Menchi Katsu",
+// List of fun cat names
+const catNames = [
+  "Whiskers",
+  "Luna",
+  "Oliver",
+  "Bella",
+  "Charlie",
+  "Lily",
+  "Max",
+  "Sophie",
+  "Jack",
+  "Chloe",
+  "Simba",
+  "Mia",
+  "Tiger",
+  "Zoe",
+  "Shadow",
+  "Grace",
+  "Felix",
+  "Ruby",
+  "Smokey",
+  "Emma",
+  "Mittens",
+  "Ava",
+  "Oreo",
+  "Isabella",
+  "Ginger",
+  "Mia",
+  "Patches",
+  "Lily",
+  "Boots",
+  "Penelope",
 ];
+
+// Array of all available general SVG icons
+const generalIcons = [g1Url, g2Url, g3Url, g4Url, g5Url, g6Url];
 
 export function Windows() {
   const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
@@ -43,22 +52,41 @@ export function Windows() {
   const usedNames = new Set<string>();
   const nameCounts: Record<string, number> = {};
 
-  function getUniqueDishName(windowId: string) {
+  // Icon assignment state
+  const windowIcons: Record<string, string> = {};
+  const availableIcons = [...generalIcons];
+  let iconIndex = 0;
+
+  function getUniqueCatName(windowId: string) {
     // Try to assign an unused name
-    for (const dish of japaneseDishes) {
-      if (!usedNames.has(dish)) {
-        usedNames.add(dish);
-        windowNames[windowId] = dish;
-        return dish;
+    for (const catName of catNames) {
+      if (!usedNames.has(catName)) {
+        usedNames.add(catName);
+        windowNames[windowId] = catName;
+        return catName;
       }
     }
     // If all names are used, append a number
-    const base =
-      japaneseDishes[parseInt(windowId, 10) % japaneseDishes.length] || "";
+    const base = catNames[parseInt(windowId, 10) % catNames.length] || "";
     nameCounts[base] = (nameCounts[base] ?? 1) + 1;
     const uniqueName = `${base} ${nameCounts[base]}`;
     windowNames[windowId] = uniqueName;
     return uniqueName;
+  }
+
+  function getIconForWindow(windowId: string) {
+    // Return existing icon if already assigned
+    if (windowIcons[windowId]) {
+      return windowIcons[windowId];
+    }
+
+    // Assign the next icon in rotation
+    const icon = availableIcons[iconIndex % availableIcons.length];
+    if (icon) {
+      windowIcons[windowId] = icon;
+      iconIndex++;
+    }
+    return icon;
   }
 
   const groupedTabs = tabs.reduce(
@@ -77,7 +105,8 @@ export function Windows() {
         if (!windowTabs || windowTabs.length === 0) return null;
         // Generate or reuse a unique name for this window
         const windowName =
-          windowNames[windowIdStr] || getUniqueDishName(windowIdStr);
+          windowNames[windowIdStr] || getUniqueCatName(windowIdStr);
+        const windowIcon = getIconForWindow(windowIdStr);
         return (
           <div
             key={windowIdStr}
@@ -86,21 +115,13 @@ export function Windows() {
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <svg
-                      className="h-5 w-5 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                      />
-                    </svg>
-                  </div>
+                  {/* <div className="h-10 w-10 bg-white rounded-lg flex items-center justify-center shadow-sm"> */}
+                  <img
+                    src={windowIcon}
+                    alt={`${windowName} icon`}
+                    className="h-10 w-10"
+                  />
+                  {/* </div> */}
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       {windowName} Window
