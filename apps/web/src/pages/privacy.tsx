@@ -1,9 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
 import privacySvg from "../assets/svg/general/privacy.svg?url";
-
-export const Route = createFileRoute("/privacy")({
-  component: PrivacyPage,
-});
 
 export function PrivacyPage() {
   return (
