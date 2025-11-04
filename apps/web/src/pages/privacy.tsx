@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import privacySvg from "../assets/svg/general/privacy.svg?url";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyPage,
@@ -8,7 +9,7 @@ export function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="flex items-center gap-3 mb-6">
-        <span className="text-5xl">🐱</span>
+        <img src={privacySvg} alt="Privacy Policy" className="w-16 h-16" />
         <h1 className="text-4xl font-bold text-gray-900">Privacy Policy</h1>
       </div>
       <p className="text-sm text-gray-500 mb-8 font-medium">
