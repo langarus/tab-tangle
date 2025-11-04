@@ -16,9 +16,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
   const router = useRouterState();
   const currentPath = router.location.pathname;
 
-  const handleCloseAll = () => {
+  const handleCloseAll = (e: React.MouseEvent) => {
     // Close all selected tabs
-    handleCloseGroup(selectedTabs, {} as React.MouseEvent);
+    handleCloseGroup(selectedTabs, e);
     // Reset selection after closing
     resetSelection();
   };
