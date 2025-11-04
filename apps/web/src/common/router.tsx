@@ -13,6 +13,8 @@ import { Layout } from "../components/Layout";
 import { Domains } from "../pages/domains";
 import { Windows } from "../pages/windows";
 import ChronologicalTabs from "../components/ChronologicalTabs";
+import { PrivacyPage } from "../pages/privacy";
+import { AboutPage } from "../pages/about";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -57,12 +59,26 @@ const boardRoute = createRoute({
   component: BoardPage,
 });
 
+const privacyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/privacy",
+  component: PrivacyPage,
+});
+
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/about",
+  component: AboutPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   authRoute,
   boardRoute,
   domainsRoute,
   windowsRoute,
+  privacyRoute,
+  aboutRoute,
 ]);
 
 const router = createRouter({ routeTree });

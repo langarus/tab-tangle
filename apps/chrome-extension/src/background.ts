@@ -165,6 +165,15 @@ chrome.windows.onFocusChanged.addListener((windowId) => {
   }
 });
 
+// Privacy-sensitive URL patterns to optionally filter
+const SENSITIVE_PATTERNS = [
+  /^chrome:\/\//,
+  /^chrome-extension:\/\//,
+  /^about:/,
+  /^file:\/\//,
+  // Users can opt to hide these patterns in settings
+];
+
 async function getAllTabs(): Promise<TabInfo[]> {
   try {
     const tabs = await chrome.tabs.query({});

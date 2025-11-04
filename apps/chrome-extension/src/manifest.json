@@ -2,8 +2,9 @@
   "manifest_version": 3,
   "name": "Tab Tangle",
   "version": "1.0.0",
-  "description": "Tame your tabs",
-  "permissions": ["activeTab", "tabs", "storage"],
+  "description": "Manage, search, and organize your browser tabs with a visual dashboard. Search across all tabs, close multiple tabs at once, and keep your browsing organized.",
+  "permissions": ["activeTab", "tabs"],
+  "incognito": "not_allowed",
   "externally_connectable": {
     "matches": [
       "https://www.tab-tangle.com/*",

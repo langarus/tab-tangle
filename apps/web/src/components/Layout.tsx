@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { useGeneralCtx } from "../common/general";
 import { ModeSelector } from "./ModeSelector";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const {
@@ -12,6 +12,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
     handleCloseGroup,
     resetSelection,
   } = useGeneralCtx();
+
+  const router = useRouterState();
+  const currentPath = router.location.pathname;
 
   const handleCloseAll = () => {
     // Close all selected tabs
@@ -45,6 +48,26 @@ export const Layout = ({ children }: PropsWithChildren) => {
               </div>
             </Link>
             <div className="flex items-center space-x-4">
+              <Link
+                to="/about"
+                className={`text-sm font-medium transition-colors ${
+                  currentPath === "/about"
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                About
+              </Link>
+              <Link
+                to="/privacy"
+                className={`text-sm font-medium transition-colors ${
+                  currentPath === "/privacy"
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Privacy
+              </Link>
               <div
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   isConnected
@@ -109,6 +132,40 @@ export const Layout = ({ children }: PropsWithChildren) => {
           </button>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="mt-16 border-t border-gray-200 bg-white/50">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex flex-wrap justify-between items-center gap-4">
+            <div className="text-sm text-gray-600">
+              © {new Date().getFullYear()} Tab Tangle. Open source and
+              privacy-first.
+            </div>
+            <div className="flex gap-6 text-sm">
+              <Link
+                to="/about"
+                className={
+                  currentPath === "/about"
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-600 hover:text-gray-900"
+                }
+              >
+                About
+              </Link>
+              <Link
+                to="/privacy"
+                className={
+                  currentPath === "/privacy"
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-600 hover:text-gray-900"
+                }
+              >
+                Privacy
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
