@@ -19,7 +19,7 @@ export function Domains() {
       }
       return acc;
     },
-    {} as Record<string, TabInfo[]>
+    {} as Record<string, TabInfo[]>,
   );
 
   // Get favicon URL for domain

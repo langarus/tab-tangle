@@ -9,7 +9,7 @@ interface TabCardProps {
     e: React.MouseEvent,
     selectedTabs?: TabInfo[],
     isSelectMode?: boolean,
-    resetSelection?: () => void
+    resetSelection?: () => void,
   ) => void;
   className?: string;
 }
@@ -24,7 +24,7 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
   } = useGeneralCtx();
 
   const isSelected = selectedTabs.some(
-    (selectedTab) => selectedTab.id === tab.id
+    (selectedTab) => selectedTab.id === tab.id,
   );
 
   const handleTabClick = (e: React.MouseEvent) => {
@@ -43,7 +43,7 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "SWITCH_TO_TAB", tabId: tab.id },
-        })
+        }),
       );
     }
   };

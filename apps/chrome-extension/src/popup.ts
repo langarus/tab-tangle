@@ -13,14 +13,14 @@ let allTabs: TabInfo[] = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   const openDashboardBtn = document.getElementById(
-    "openDashboard"
+    "openDashboard",
   ) as HTMLButtonElement;
   const tabSearchInput = document.getElementById(
-    "tabSearch"
+    "tabSearch",
   ) as HTMLInputElement;
   const searchResults = document.getElementById("searchResults") as HTMLElement;
   const closeAllBtn = document.getElementById(
-    "closeAllMatching"
+    "closeAllMatching",
   ) as HTMLButtonElement;
 
   // Get current tab count and all tabs
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
           searchResults.innerHTML = "";
           closeAllBtn.style.display = "none";
           updateTabCount();
-        }
+        },
       );
     } else {
       // console.log("No valid tab IDs to close");
@@ -101,7 +101,7 @@ function updateTabCount(callback?: () => void) {
 function searchTabs(query: string) {
   const searchResults = document.getElementById("searchResults") as HTMLElement;
   const closeAllBtn = document.getElementById(
-    "closeAllMatching"
+    "closeAllMatching",
   ) as HTMLButtonElement;
 
   // Filter tabs based on title and URL
@@ -150,10 +150,10 @@ function searchTabs(query: string) {
   // Add click handlers for individual tabs and close buttons
   matchingTabs.forEach((tab) => {
     const tabElement = document.querySelector(
-      `[data-tab-id="${tab.id}"].search-result-item`
+      `[data-tab-id="${tab.id}"].search-result-item`,
     );
     const closeBtn = document.querySelector(
-      `.tab-close-btn[data-tab-id="${tab.id}"]`
+      `.tab-close-btn[data-tab-id="${tab.id}"]`,
     );
 
     if (tabElement) {
@@ -173,7 +173,7 @@ function searchTabs(query: string) {
             // console.log("Switch to tab response:", response);
             // Close the popup after switching
             window.close();
-          }
+          },
         );
       });
     }
@@ -192,7 +192,7 @@ function searchTabs(query: string) {
             updateTabCount(() => {
               searchTabs(query);
             });
-          }
+          },
         );
       });
     }

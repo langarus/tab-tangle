@@ -25,7 +25,7 @@ if (
               timestamp: message.timestamp,
             },
           },
-        })
+        }),
       );
     }
   });
@@ -64,7 +64,7 @@ if (
         type: "EXTENSION_CONNECTED",
         data: { connected: true },
       },
-    })
+    }),
   );
 }
 

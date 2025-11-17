@@ -1,7 +1,8 @@
 import { PropsWithChildren } from "react";
 import { useGeneralCtx } from "../common/general";
 import { ModeSelector } from "./ModeSelector";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { FilterDropdown } from "./FilterDropdown";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const {
@@ -15,12 +16,17 @@ export const Layout = ({ children }: PropsWithChildren) => {
 
   const router = useRouterState();
   const currentPath = router.location.pathname;
+  const navigate = useNavigate();
 
   const handleCloseAll = (e: React.MouseEvent) => {
     // Close all selected tabs
     handleCloseGroup(selectedTabs, e);
     // Reset selection after closing
     resetSelection();
+    // Navigate back to home to reset filters (search and duplicates)
+    if (currentPath === "/filtered") {
+      navigate({ to: "/" });
+    }
   };
 
   return (
@@ -110,7 +116,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
 
       {/* Floating "Close All" button - only shows in select mode */}
       {isSelectMode && (
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-8 right-24 z-50">
           <button
             onClick={handleCloseAll}
             className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 font-semibold transform hover:scale-105"
@@ -132,6 +138,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
           </button>
         </div>
       )}
+
+      {/* Floating Filter Button */}
+      {isConnected && tabs.length > 0 && <FilterDropdown />}
 
       {/* Footer */}
       <footer className="mt-16 border-t border-gray-200 bg-white/50">

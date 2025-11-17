@@ -15,6 +15,7 @@ import { Windows } from "../pages/windows";
 import ChronologicalTabs from "../components/ChronologicalTabs";
 import { PrivacyPage } from "../pages/privacy";
 import { AboutPage } from "../pages/about";
+import { FilteredResults } from "../pages/filtered";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -71,6 +72,12 @@ const aboutRoute = createRoute({
   component: AboutPage,
 });
 
+const filteredRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/filtered",
+  component: FilteredResults,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   authRoute,
@@ -79,6 +86,7 @@ const routeTree = rootRoute.addChildren([
   windowsRoute,
   privacyRoute,
   aboutRoute,
+  filteredRoute,
 ]);
 
 const router = createRouter({ routeTree });

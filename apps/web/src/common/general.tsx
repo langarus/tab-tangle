@@ -12,7 +12,7 @@ const useGeneral = () => {
   const [tabs, setTabs] = useState<TabInfo[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [notification, setNotification] = useState<NotificationState | null>(
-    null
+    null,
   );
   const notificationTimeout = useRef<NodeJS.Timeout | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -44,7 +44,7 @@ const useGeneral = () => {
     // Listen for custom events from the extension
     window.addEventListener(
       "extensionMessage",
-      handleExtensionMessage as EventListener
+      handleExtensionMessage as EventListener,
     );
 
     // Request initial tabs data
@@ -52,7 +52,7 @@ const useGeneral = () => {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "REQUEST_TABS" },
-        })
+        }),
       );
     };
 
@@ -67,7 +67,7 @@ const useGeneral = () => {
     return () => {
       window.removeEventListener(
         "extensionMessage",
-        handleExtensionMessage as EventListener
+        handleExtensionMessage as EventListener,
       );
       clearInterval(interval);
     };
@@ -90,7 +90,7 @@ const useGeneral = () => {
     e: React.MouseEvent,
     selectedTabs?: TabInfo[],
     isSelectMode?: boolean,
-    resetSelection?: () => void
+    resetSelection?: () => void,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -113,7 +113,7 @@ const useGeneral = () => {
         window.dispatchEvent(
           new CustomEvent("dashboardMessage", {
             detail: { type: "CLOSE_TABS", tabIds },
-          })
+          }),
         );
         showNotification(selectedTabs);
 
@@ -130,7 +130,7 @@ const useGeneral = () => {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TAB", tabId },
-        })
+        }),
       );
       showNotification([tab]);
     }
@@ -150,7 +150,7 @@ const useGeneral = () => {
       window.dispatchEvent(
         new CustomEvent("dashboardMessage", {
           detail: { type: "CLOSE_TABS", tabIds },
-        })
+        }),
       );
       showNotification(tabsToClose);
     }
@@ -170,7 +170,7 @@ const useGeneral = () => {
     window.dispatchEvent(
       new CustomEvent("dashboardMessage", {
         detail: { type: "RESTORE_TABS", tabs: tabsToRestore },
-      })
+      }),
     );
 
     setNotification(null);
@@ -199,7 +199,7 @@ const useSelectTabs = () => {
 
   const handleDeselectTabs = (tabs: TabInfo[]) => {
     setSelectedTabs((prev) =>
-      [...prev].filter((t) => !tabs.map((t) => t.id).includes(t.id))
+      [...prev].filter((t) => !tabs.map((t) => t.id).includes(t.id)),
     );
   };
 

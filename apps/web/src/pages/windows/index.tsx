@@ -96,7 +96,7 @@ export function Windows() {
       if (windowId) acc?.[windowId]?.push(tab);
       return acc;
     },
-    {} as Record<number, TabInfo[]>
+    {} as Record<number, TabInfo[]>,
   );
 
   return (
