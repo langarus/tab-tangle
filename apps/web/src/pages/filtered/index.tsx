@@ -30,9 +30,10 @@ export function FilteredResults() {
   if (!currentPageUrlNormalized) return null;
 
   // Filter out the current tab (dashboard tab) from all tabs
+  // Also filter out tabs without IDs or URLs - these can't be closed and cause UI issues
   const filteredTabs = useMemo(() => {
     return tabs.filter((tab) => {
-      if (!tab.url) return false;
+      if (!tab.id || !tab.url) return false; // Filter out tabs without IDs or URLs
       const tabUrlNormalized = tab?.url
         ?.split("?")[0]
         ?.split("#")[0]

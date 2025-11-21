@@ -4,7 +4,9 @@ import { useGeneralCtx } from "../../common/general";
 
 export function Domains() {
   const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
-  const groupedTabs = tabs.reduce(
+  // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
+  const validTabs = tabs.filter((tab) => tab.id && tab.url);
+  const groupedTabs = validTabs.reduce(
     (acc, tab) => {
       if (!tab.url) return acc;
 
@@ -19,7 +21,7 @@ export function Domains() {
       }
       return acc;
     },
-    {} as Record<string, TabInfo[]>,
+    {} as Record<string, TabInfo[]>
   );
 
   // Get favicon URL for domain

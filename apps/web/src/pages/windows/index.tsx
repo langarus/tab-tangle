@@ -47,6 +47,8 @@ const generalIcons = [g1Url, g2Url, g3Url, g4Url, g5Url, g6Url];
 
 export function Windows() {
   const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
+  // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
+  const validTabs = tabs.filter((tab) => tab.id && tab.url);
   // Keep a mapping of windowId to generated name
   const windowNames: Record<string, string> = {};
   const usedNames = new Set<string>();
@@ -89,14 +91,14 @@ export function Windows() {
     return icon;
   }
 
-  const groupedTabs = tabs.reduce(
+  const groupedTabs = validTabs.reduce(
     (acc, tab) => {
       const windowId = tab.windowId;
       if (windowId && !acc[windowId]) acc[windowId] = [];
       if (windowId) acc?.[windowId]?.push(tab);
       return acc;
     },
-    {} as Record<number, TabInfo[]>,
+    {} as Record<number, TabInfo[]>
   );
 
   return (

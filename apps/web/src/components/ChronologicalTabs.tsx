@@ -18,7 +18,9 @@ interface TimeGroup {
 function ChronologicalTabs() {
   const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
 
-  if (tabs.length === 0) {
+  // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
+  const validTabs = tabs.filter((tab) => tab.id && tab.url);
+  if (validTabs.length === 0) {
     return (
       <div className="text-center py-12">
         <div className="text-gray-400 text-lg mb-2">No tabs received yet</div>
@@ -111,7 +113,7 @@ function ChronologicalTabs() {
     return groups.filter((group) => group.tabs.length > 0);
   };
 
-  const timeGroups = groupTabsByTime(tabs);
+  const timeGroups = groupTabsByTime(validTabs);
 
   // Format time ago
   const formatTimeAgo = (lastAccessed: number): string => {
