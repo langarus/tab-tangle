@@ -30,7 +30,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -87,7 +87,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
           </div>
         </div>
       </div>
-      <div className="container mx-auto px-6 py-8">
+      <div className="flex-1 container mx-auto px-6 py-8">
         {isConnected && tabs.length > 0 && (
           <div className="mb-8">
             <ModeSelector />
@@ -139,11 +139,11 @@ export const Layout = ({ children }: PropsWithChildren) => {
         </div>
       )}
 
-      {/* Floating Filter Button */}
-      {isConnected && tabs.length > 0 && <FilterDropdown />}
+      {/* Floating Filter Button - only show on main pages, not on about/privacy */}
+      {isConnected && tabs.length > 0 && currentPath !== "/about" && currentPath !== "/privacy" && <FilterDropdown />}
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-gray-200 bg-white/50">
+      <footer className="border-t border-gray-200 bg-white/50 mt-auto">
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-wrap justify-between items-center gap-4">
             <div className="text-sm text-gray-600">

@@ -113,10 +113,10 @@ export function PrivacyPage() {
               <div>
                 <strong>Email</strong>:{" "}
                 <a
-                  href="mailto:your-email@example.com"
+                  href="mailto:tab-tangle@proton.me"
                   className="text-blue-600 hover:text-blue-800 underline font-medium"
                 >
-                  your-email@example.com
+                  tab-tangle@proton.me
                 </a>
               </div>
             </li>
