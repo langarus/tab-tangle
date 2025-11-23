@@ -24,8 +24,8 @@ export const Layout = ({ children }: PropsWithChildren) => {
     // Reset selection after closing
     resetSelection();
     // Navigate back to home to reset filters (search and duplicates)
-    if (currentPath === "/filtered") {
-      navigate({ to: "/" });
+    if (currentPath === "/app/filtered") {
+      navigate({ to: "/app" });
     }
   };
 
@@ -34,7 +34,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/">
+            <Link to="/app">
               <div className="flex items-center space-x-3">
                 {/* <div className="h-8 w-8  rounded-lg flex items-center justify-center"> */}
                 <img
@@ -55,9 +55,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
             </Link>
             <div className="flex items-center space-x-4">
               <Link
-                to="/about"
+                to="/app/about"
                 className={`text-sm font-medium transition-colors ${
-                  currentPath === "/about"
+                  currentPath === "/app/about"
                     ? "text-blue-600 font-semibold"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
@@ -65,9 +65,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
                 About
               </Link>
               <Link
-                to="/privacy"
+                to="/app/privacy"
                 className={`text-sm font-medium transition-colors ${
-                  currentPath === "/privacy"
+                  currentPath === "/app/privacy"
                     ? "text-blue-600 font-semibold"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
@@ -140,7 +140,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
       )}
 
       {/* Floating Filter Button - only show on main pages, not on about/privacy */}
-      {isConnected && tabs.length > 0 && currentPath !== "/about" && currentPath !== "/privacy" && <FilterDropdown />}
+      {isConnected && tabs.length > 0 && currentPath !== "/app/about" && currentPath !== "/app/privacy" && <FilterDropdown />}
 
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/50 mt-auto">
@@ -151,9 +151,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
             </div>
             <div className="flex gap-6 text-sm">
               <Link
-                to="/about"
+                to="/app/about"
                 className={
-                  currentPath === "/about"
+                  currentPath === "/app/about"
                     ? "text-blue-600 font-semibold"
                     : "text-gray-600 hover:text-gray-900"
                 }
@@ -161,9 +161,9 @@ export const Layout = ({ children }: PropsWithChildren) => {
                 About
               </Link>
               <Link
-                to="/privacy"
+                to="/app/privacy"
                 className={
-                  currentPath === "/privacy"
+                  currentPath === "/app/privacy"
                     ? "text-blue-600 font-semibold"
                     : "text-gray-600 hover:text-gray-900"
                 }

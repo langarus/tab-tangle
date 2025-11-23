@@ -83,7 +83,7 @@ export function FilterDropdown() {
 
   // Sync search query with URL params
   useEffect(() => {
-    if (currentPath === "/filtered" && searchParams) {
+    if (currentPath === "/app/filtered" && searchParams) {
       if (searchParams.q) {
         setSearchQuery(searchParams.q);
       }
@@ -99,35 +99,35 @@ export function FilterDropdown() {
     setSearchQuery(value);
     if (value.trim()) {
       navigate({
-        to: "/filtered",
+        to: "/app/filtered",
         search: { q: value.trim(), duplicates: false },
       });
     } else if (searchParams?.duplicates) {
       // Keep duplicates view if it was active
       navigate({
-        to: "/filtered",
+        to: "/app/filtered",
         search: { duplicates: true, q: "" },
       });
     } else {
       // Go back to home if no filters
-      navigate({ to: "/" });
+      navigate({ to: "/app" });
     }
   };
 
   const handleShowDuplicates = (show: boolean) => {
     if (show) {
       navigate({
-        to: "/filtered",
+        to: "/app/filtered",
         search: { duplicates: true, q: searchQuery || "" },
       });
     } else {
       if (searchQuery.trim()) {
         navigate({
-          to: "/filtered",
+          to: "/app/filtered",
           search: { q: searchQuery.trim(), duplicates: false },
         });
       } else {
-        navigate({ to: "/" });
+        navigate({ to: "/app" });
       }
     }
     setIsOpen(false);

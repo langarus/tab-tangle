@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open dashboard
   openDashboardBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: "https://www.tab-tangle.com" });
+    chrome.tabs.create({ url: "https://www.tab-tangle.com/app" });
   });
 
   // Search functionality

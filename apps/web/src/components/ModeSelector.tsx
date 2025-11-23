@@ -4,18 +4,19 @@ import { useAuthCtx } from "../common/auth";
 export function ModeSelector() {
   const { user } = useAuthCtx();
   const location = useRouterState({ select: (s) => s.location });
-  const currentMode = location.pathname.split("/")[1];
+  const currentPath = location.pathname;
+  const currentMode = location.pathname.split("/")[2] || ""; // Now we need to check the second segment after /app
 
   const pro = user ? (
     <Link
-      to="/board"
+      to="/app/board"
       className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-violet-100 text-violet-700 shadow-sm hover:shadow-md hover:bg-violet-200 border border-violet-200 hover:border-violet-300"
     >
       Board
     </Link>
   ) : // TODO: Re-enable Pro+ feature in the future
   // <Link
-  //   to="/auth"
+  //   to="/app/auth"
   //   className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-violet-100 text-violet-700 shadow-sm hover:shadow-md hover:bg-violet-200 border border-violet-200 hover:border-violet-300"
   // >
   //   Pro+
@@ -26,10 +27,10 @@ export function ModeSelector() {
     <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
       <div className="flex items-center gap-4">
         <div className="flex items-center bg-gray-100 rounded-xl p-1 shadow-sm border border-gray-200">
-          <Link to="/">
+          <Link to="/app">
             <button
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                currentMode === ""
+                currentPath === "/app" || currentMode === ""
                   ? "bg-white text-gray-900 shadow-sm border border-gray-200"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
               }`}
@@ -39,7 +40,7 @@ export function ModeSelector() {
             </button>
           </Link>
 
-          <Link to="/windows">
+          <Link to="/app/windows">
             <button
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                 currentMode === "windows"
@@ -52,7 +53,7 @@ export function ModeSelector() {
             </button>
           </Link>
 
-          <Link to="/domains">
+          <Link to="/app/domains">
             <button
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                 currentMode === "domains"

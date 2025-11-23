@@ -16,6 +16,7 @@ import ChronologicalTabs from "../components/ChronologicalTabs";
 import { PrivacyPage } from "../pages/privacy";
 import { AboutPage } from "../pages/about";
 import { FilteredResults } from "../pages/filtered";
+import { HomePage } from "../pages/home";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -30,63 +31,81 @@ const rootRoute = createRootRoute({
   ),
 });
 
+// Root route - Hello World
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
+  path: "/",
+  component: HomePage,
+});
+
+// App route - parent for all existing routes
+const appRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/app",
+  component: () => <Outlet />,
+});
+
+// All existing routes moved under /app
+const appIndexRoute = createRoute({
+  getParentRoute: () => appRoute,
   path: "/",
   component: ChronologicalTabs,
 });
 
 const domainsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/domains",
   component: Domains,
 });
 
 const windowsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/windows",
   component: Windows,
 });
 
 const authRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/auth",
   component: AuthPage,
 });
 
 const boardRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/board",
   component: BoardPage,
 });
 
 const privacyRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/privacy",
   component: PrivacyPage,
 });
 
 const aboutRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/about",
   component: AboutPage,
 });
 
 const filteredRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => appRoute,
   path: "/filtered",
   component: FilteredResults,
 });
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  authRoute,
-  boardRoute,
-  domainsRoute,
-  windowsRoute,
-  privacyRoute,
-  aboutRoute,
-  filteredRoute,
+  appRoute.addChildren([
+    appIndexRoute,
+    authRoute,
+    boardRoute,
+    domainsRoute,
+    windowsRoute,
+    privacyRoute,
+    aboutRoute,
+    filteredRoute,
+  ]),
 ]);
 
 const router = createRouter({ routeTree });
