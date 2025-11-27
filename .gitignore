@@ -26,6 +26,9 @@ coverage
 out/
 build
 dist
+dist-chrome
+dist-firefox
+*.zip
 
 
 # Debug

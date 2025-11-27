@@ -1,5 +1,13 @@
 // Background service worker for Chrome extension
-console.log("Tab Dashboard Extension background script loaded");
+import type { Runtime, Tabs, Windows } from "webextension-polyfill";
+
+// Load polyfill for service worker (Chrome)
+if (typeof importScripts === "function") {
+  importScripts("browser-polyfill.js");
+}
+
+// Browser API - provided by webextension-polyfill or loaded via scripts array
+const browser = (globalThis as any).browser || (globalThis as any).chrome;
 
 interface TabInfo {
   id?: number;
@@ -12,23 +20,21 @@ interface TabInfo {
 }
 
 // Store active connections to dashboard
-let dashboardConnections: chrome.runtime.Port[] = [];
+let dashboardConnections: Runtime.Port[] = [];
 
 // Debounce mechanism for tab updates
 let updateTimeout: NodeJS.Timeout | null = null;
 const DEBOUNCE_DELAY = 100; // milliseconds
 
 // Listen for extension installation
-chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed");
+browser.runtime.onInstalled.addListener(() => {
   // Send initial tab data
   sendTabsToConnectedDashboards();
 });
 
 // Listen for connections from content scripts (dashboard bridge)
-chrome.runtime.onConnect.addListener((port) => {
+browser.runtime.onConnect.addListener((port: Runtime.Port) => {
   if (port.name === "dashboard-bridge") {
-    console.log("Dashboard bridge connected");
     dashboardConnections.push(port);
 
     // Send current tabs immediately to new connection
@@ -42,14 +48,13 @@ chrome.runtime.onConnect.addListener((port) => {
 
     // Handle port disconnect
     port.onDisconnect.addListener(() => {
-      console.log("Dashboard bridge disconnected");
       dashboardConnections = dashboardConnections.filter(
-        (conn) => conn !== port,
+        (conn) => conn !== port
       );
     });
 
     // Handle messages from dashboard bridge
-    port.onMessage.addListener((message) => {
+    port.onMessage.addListener((message: any) => {
       if (message.type === "REQUEST_TABS") {
         getAllTabs().then((tabs) => {
           port.postMessage({
@@ -72,7 +77,7 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 // Handle messages from popup and content scripts
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message: any, sender: Runtime.MessageSender, sendResponse: (response?: any) => void) => {
   if (message.type === "GET_TABS") {
     getAllTabs().then((tabs) => {
       sendResponse({ tabs });
@@ -132,35 +137,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Listen for tab events for live updates
-chrome.tabs.onCreated.addListener((tab) => {
-  console.log("Tab created - sending update", tab.id);
+browser.tabs.onCreated.addListener((tab: Tabs.Tab) => {
   // Use debounced update for tab creation
   debouncedSendTabs();
 });
 
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  console.log("Tab removed - sending update", tabId);
+browser.tabs.onRemoved.addListener((tabId: number, removeInfo: Tabs.OnRemovedRemoveInfoType) => {
   // Immediate update for tab removal since it's critical
   sendTabsToConnectedDashboards();
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+browser.tabs.onUpdated.addListener((tabId: number, changeInfo: Tabs.OnUpdatedChangeInfoType, tab: Tabs.Tab) => {
   // Only send updates for significant changes
   if (changeInfo.status === "complete" || changeInfo.title || changeInfo.url) {
-    console.log("Tab updated - sending update", tabId, changeInfo);
     debouncedSendTabs();
   }
 });
 
-chrome.tabs.onActivated.addListener((activeInfo) => {
-  console.log("Tab activated - sending update", activeInfo.tabId);
+browser.tabs.onActivated.addListener((activeInfo: Tabs.OnActivatedActiveInfoType) => {
   // Immediate update for tab activation to show active state quickly
   sendTabsToConnectedDashboards();
 });
 
-chrome.windows.onFocusChanged.addListener((windowId) => {
-  if (windowId !== chrome.windows.WINDOW_ID_NONE) {
-    console.log("Window focus changed - sending update", windowId);
+browser.windows.onFocusChanged.addListener((windowId: number) => {
+  if (windowId !== browser.windows.WINDOW_ID_NONE) {
     debouncedSendTabs();
   }
 });
@@ -176,8 +176,8 @@ const SENSITIVE_PATTERNS = [
 
 async function getAllTabs(): Promise<TabInfo[]> {
   try {
-    const tabs = await chrome.tabs.query({});
-    return tabs.map((tab) => ({
+    const tabs = await browser.tabs.query({});
+    return tabs.map((tab: Tabs.Tab) => ({
       id: tab.id,
       title: tab.title,
       url: tab.url,
@@ -213,7 +213,7 @@ async function sendTabsToConnectedDashboards() {
         console.error("Error sending message to dashboard:", error);
         // Remove invalid connections
         dashboardConnections = dashboardConnections.filter(
-          (conn) => conn !== port,
+          (conn) => conn !== port
         );
       }
     });
@@ -236,12 +236,11 @@ function debouncedSendTabs() {
 // Tab management functions
 async function handleCloseTab(tabId: number) {
   try {
-    await chrome.tabs.remove(tabId);
-    console.log(`Closed tab ${tabId}`);
+    await browser.tabs.remove(tabId);
     // Send updated tabs immediately after closing
     setTimeout(() => {
       sendTabsToConnectedDashboards();
-    }, 100); // Small delay to ensure Chrome has processed the change
+    }, 100); // Small delay to ensure browser has processed the change
   } catch (error) {
     console.error(`Error closing tab ${tabId}:`, error);
   }
@@ -249,12 +248,11 @@ async function handleCloseTab(tabId: number) {
 
 async function handleCloseTabs(tabIds: number[]) {
   try {
-    await chrome.tabs.remove(tabIds);
-    console.log(`Closed ${tabIds.length} tabs`);
+    await browser.tabs.remove(tabIds);
     // Send updated tabs immediately after closing
     setTimeout(() => {
       sendTabsToConnectedDashboards();
-    }, 100); // Small delay to ensure Chrome has processed the change
+    }, 100); // Small delay to ensure browser has processed the change
   } catch (error) {
     console.error(`Error closing tabs:`, error);
   }
@@ -263,12 +261,11 @@ async function handleCloseTabs(tabIds: number[]) {
 async function handleSwitchToTab(tabId: number) {
   try {
     // Get the tab to find its window
-    const tab = await chrome.tabs.get(tabId);
+    const tab = await browser.tabs.get(tabId);
     // Switch to the tab
-    await chrome.tabs.update(tabId, { active: true });
+    await browser.tabs.update(tabId, { active: true });
     // Focus the window containing the tab
-    await chrome.windows.update(tab.windowId, { focused: true });
-    console.log(`Switched to tab ${tabId}`);
+    await browser.windows.update(tab.windowId, { focused: true });
     // Send updated tabs to reflect the active state change
     setTimeout(() => {
       sendTabsToConnectedDashboards();
@@ -279,23 +276,22 @@ async function handleSwitchToTab(tabId: number) {
 }
 
 async function handleRestoreTabs(
-  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>,
+  tabsToRestore: Array<{ url?: string; windowId: number; title?: string }>
 ) {
   try {
     for (const tabData of tabsToRestore) {
       if (tabData.url) {
-        await chrome.tabs.create({
+        await browser.tabs.create({
           url: tabData.url,
           windowId: tabData.windowId,
           active: false,
         });
       }
     }
-    console.log(`Restored ${tabsToRestore.length} tabs`);
     // Send updated tabs immediately after restoring
     setTimeout(() => {
       sendTabsToConnectedDashboards();
-    }, 100); // Small delay to ensure Chrome has processed the change
+    }, 100); // Small delay to ensure browser has processed the change
   } catch (error) {
     console.error(`Error restoring tabs:`, error);
   }

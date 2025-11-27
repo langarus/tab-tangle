@@ -1,6 +1,47 @@
+import { Link } from "@tanstack/react-router";
+
 export const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
+      {/* Header Navigation */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link to="/" className="flex items-center space-x-3">
+              <img
+                src="/img/favicon.svg"
+                alt="Tab Tangle Logo"
+                className="h-10 w-10"
+              />
+              <div>
+                <h1 className="text-lg font-bold text-gray-900">Tab Tangle</h1>
+              </div>
+            </Link>
+            <nav className="flex items-center space-x-4 sm:space-x-6">
+              <Link
+                to="/app/about"
+                className="hidden sm:inline-block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                About
+              </Link>
+              <Link
+                to="/app/privacy"
+                className="hidden sm:inline-block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                Privacy
+              </Link>
+              <Link
+                to="/app"
+                className="px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <span className="hidden sm:inline">Open Dashboard</span>
+                <span className="sm:hidden">Dashboard</span>
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -14,9 +55,6 @@ export const HomePage = () => {
             <p className="text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
               Manage, search, and organize your browser tabs with a beautiful
               visual dashboard.
-              <span className="block mt-2 text-lg text-gray-500">
-                Privacy-first. Open source. Free forever.
-              </span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
@@ -281,7 +319,7 @@ export const HomePage = () => {
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Join thousands of users who have taken control of their browsing
-            experience. Free forever, privacy-first, open source.
+            experience.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -293,7 +331,7 @@ export const HomePage = () => {
               Install Extension
             </a>
             <a
-              href="/dashboard"
+              href="/app"
               className="px-8 py-4 bg-blue-700 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl border border-blue-500 transform hover:-translate-y-0.5 transition-all duration-200"
             >
               Open Dashboard
@@ -301,6 +339,38 @@ export const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 bg-white/50 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-3">
+              <img
+                src="/img/favicon.svg"
+                alt="Tab Tangle Logo"
+                className="h-8 w-8"
+              />
+              <div className="text-sm text-gray-600">
+                © {new Date().getFullYear()} Tab Tangle. Tame your tabs.
+              </div>
+            </div>
+            <nav className="flex items-center gap-6">
+              <Link
+                to="/app/about"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                About
+              </Link>
+              <Link
+                to="/app/privacy"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              >
+                Privacy
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

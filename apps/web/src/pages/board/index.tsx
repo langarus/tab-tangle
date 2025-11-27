@@ -6,15 +6,7 @@ import "@excalidraw/excalidraw/index.css";
 import { useGeneralCtx } from "../../common/general";
 import { useMemo } from "react";
 import { TabInfo } from "../../types";
-
-// Helper function to get domain from URL
-const getDomainFromUrl = (url: string) => {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return url;
-  }
-};
+import { getDomainFromUrl } from "../../utils/url";
 
 // Helper function to truncate long text
 const truncateText = (text: string, maxLength: number = 30) => {

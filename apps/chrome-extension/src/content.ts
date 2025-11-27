@@ -1,5 +1,8 @@
 // Content script for Chrome extension
-console.log("Tab Dashboard Extension content script loaded");
+import type { Runtime } from "webextension-polyfill";
+
+// Browser API - provided by browser-polyfill.js loaded in manifest
+const browser = (globalThis as any).browser || (globalThis as any).chrome;
 
 // Only run on dashboard pages
 if (
@@ -7,25 +10,31 @@ if (
   window.location.href.includes("tab-tangle.com") ||
   window.location.href.includes("tab-tangle.web.app")
 ) {
-  console.log("Dashboard page detected, setting up communication bridge");
-
   // Establish connection to background script
-  const port = chrome.runtime.connect({ name: "dashboard-bridge" });
+  const port = browser.runtime.connect({ name: "dashboard-bridge" });
 
   // Listen for messages from background script
-  port.onMessage.addListener((message) => {
+  port.onMessage.addListener((message: any) => {
     if (message.type === "TABS_UPDATE") {
       // Forward to dashboard web page
+      const eventDetail = {
+        type: "TABS_UPDATE",
+        data: {
+          tabs: message.tabs,
+          timestamp: message.timestamp,
+        },
+      };
+
+      // Firefox requires cloneInto to pass data across security boundaries
+      const detail =
+        typeof cloneInto !== "undefined"
+          ? cloneInto(eventDetail, window)
+          : eventDetail;
+
       window.dispatchEvent(
         new CustomEvent("extensionMessage", {
-          detail: {
-            type: "TABS_UPDATE",
-            data: {
-              tabs: message.tabs,
-              timestamp: message.timestamp,
-            },
-          },
-        }),
+          detail: detail,
+        })
       );
     }
   });
@@ -54,29 +63,43 @@ if (
 
   // Handle port disconnect
   port.onDisconnect.addListener(() => {
-    console.log("Connection to background script lost");
+    // Connection lost - could reconnect here if needed
   });
 
   // Notify dashboard that extension is connected
+  const connectedDetail = {
+    type: "EXTENSION_CONNECTED",
+    data: { connected: true },
+  };
+
+  // Firefox requires cloneInto to pass data across security boundaries
+  const detail =
+    typeof cloneInto !== "undefined"
+      ? cloneInto(connectedDetail, window)
+      : connectedDetail;
+
   window.dispatchEvent(
     new CustomEvent("extensionMessage", {
-      detail: {
-        type: "EXTENSION_CONNECTED",
-        data: { connected: true },
-      },
-    }),
+      detail: detail,
+    })
   );
 }
 
 // Listen for direct messages from background script (for other functionality)
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "GET_PAGE_INFO") {
-    const pageInfo = {
-      title: document.title,
-      url: window.location.href,
-      timestamp: Date.now(),
-    };
-    sendResponse(pageInfo);
+browser.runtime.onMessage.addListener(
+  (
+    message: any,
+    sender: Runtime.MessageSender,
+    sendResponse: (response?: any) => void
+  ) => {
+    if (message.type === "GET_PAGE_INFO") {
+      const pageInfo = {
+        title: document.title,
+        url: window.location.href,
+        timestamp: Date.now(),
+      };
+      sendResponse(pageInfo);
+    }
+    return true;
   }
-  return true;
-});
+);

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { TabInfo } from "../types";
 import { useGeneralCtx } from "../common/general";
+import { getDomainFromUrl } from "../utils/url";
 
 interface TabCardProps {
   tab: TabInfo;
@@ -112,14 +113,6 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
       handleDeselectTabs([tab]);
     } else {
       handleSelectTabs([tab]);
-    }
-  };
-
-  const getDomainFromUrl = (url: string) => {
-    try {
-      return new URL(url).hostname.replace(/^www\./, "");
-    } catch {
-      return url;
     }
   };
 

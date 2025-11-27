@@ -2,21 +2,17 @@
   "manifest_version": 3,
   "name": "Tab Tangle",
   "version": "1.0.0",
-  "description": "Manage, search, and organize browser tabs with a visual dashboard. Search across tabs and close multiple at once.",
+  "description": "Manage, search, and organize your browser tabs with a visual dashboard. Search across all tabs, close multiple tabs at once, and keep your browsing organized.",
   "permissions": ["activeTab", "tabs"],
   "incognito": "not_allowed",
   "browser_specific_settings": {
     "gecko": {
       "id": "tab-tangle@example.com",
-      "strict_min_version": "109.0"
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
-  },
-  "externally_connectable": {
-    "matches": [
-      "https://www.tab-tangle.com/*",
-      "https://www.tab-tangle.web.app/*",
-      "http://localhost:3002/*"
-    ]
   },
   "icons": {
     "16": "icons/16.png",
@@ -25,7 +21,7 @@
     "128": "icons/128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["browser-polyfill.js", "background.js"]
   },
   "action": {
     "default_popup": "popup.html",

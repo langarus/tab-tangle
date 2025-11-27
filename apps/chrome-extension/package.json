@@ -5,7 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build",
+    "build": "pnpm run build-chrome && pnpm run build-firefox",
+    "build-chrome": "vite build --mode chrome",
+    "build-firefox": "vite build --mode firefox",
+    "package": "pnpm run package-chrome && pnpm run package-firefox",
+    "package-chrome": "cd dist-chrome && zip -r ../tab-tangle-chrome.zip . && cd ..",
+    "package-firefox": "cd dist-firefox && zip -r ../tab-tangle-firefox.zip . && cd ..",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
@@ -14,9 +19,13 @@
     "@repo/typescript-config": "workspace:*",
     "@types/chrome": "^0.0.276",
     "@types/node": "^22.15.3",
+    "@types/webextension-polyfill": "^0.12.4",
     "eslint": "^9.29.0",
     "typescript": "5.8.2",
     "vite": "^5.4.10",
     "vite-plugin-static-copy": "^1.0.6"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
   }
 }

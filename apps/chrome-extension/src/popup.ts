@@ -1,4 +1,7 @@
 // Popup script for Chrome extension
+// Browser API - provided by browser-polyfill.js loaded in popup.html
+const browser = (globalThis as any).browser || (globalThis as any).chrome;
+
 interface TabInfo {
   id?: number;
   title?: string;
@@ -13,14 +16,14 @@ let allTabs: TabInfo[] = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   const openDashboardBtn = document.getElementById(
-    "openDashboard",
+    "openDashboard"
   ) as HTMLButtonElement;
   const tabSearchInput = document.getElementById(
-    "tabSearch",
+    "tabSearch"
   ) as HTMLInputElement;
   const searchResults = document.getElementById("searchResults") as HTMLElement;
   const closeAllBtn = document.getElementById(
-    "closeAllMatching",
+    "closeAllMatching"
   ) as HTMLButtonElement;
 
   // Get current tab count and all tabs
@@ -28,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Open dashboard
   openDashboardBtn.addEventListener("click", () => {
-    chrome.tabs.create({ url: "https://www.tab-tangle.com/app" });
+    browser.tabs.create({ url: "https://www.tab-tangle.com/app" });
   });
 
   // Search functionality
@@ -63,19 +66,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // console.log("Tab IDs to close:", tabIds);
 
     if (tabIds.length > 0) {
-      chrome.runtime.sendMessage(
+      browser.runtime.sendMessage(
         {
           type: "CLOSE_TABS",
           tabIds: tabIds,
         },
-        (response) => {
-          // console.log("Close tabs response:", response);
+        () => {
           // Clear search and refresh
           tabSearchInput.value = "";
           searchResults.innerHTML = "";
           closeAllBtn.style.display = "none";
           updateTabCount();
-        },
+        }
       );
     } else {
       // console.log("No valid tab IDs to close");
@@ -86,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateTabCount(callback?: () => void) {
   const tabCountEl = document.getElementById("tabCount") as HTMLElement;
 
-  chrome.runtime.sendMessage({ type: "GET_TABS" }, (response) => {
+  browser.runtime.sendMessage({ type: "GET_TABS" }).then((response: any) => {
     allTabs = response?.tabs || [];
     const tabCount = allTabs.length;
     tabCountEl.textContent = `Open tabs: ${tabCount}`;
@@ -101,7 +103,7 @@ function updateTabCount(callback?: () => void) {
 function searchTabs(query: string) {
   const searchResults = document.getElementById("searchResults") as HTMLElement;
   const closeAllBtn = document.getElementById(
-    "closeAllMatching",
+    "closeAllMatching"
   ) as HTMLButtonElement;
 
   // Filter tabs based on title and URL
@@ -112,36 +114,65 @@ function searchTabs(query: string) {
   });
 
   if (matchingTabs.length === 0) {
-    searchResults.innerHTML =
-      '<div class="search-result-item">No matching tabs found</div>';
+    searchResults.textContent = "";
+    const noResults = document.createElement("div");
+    noResults.className = "search-result-item";
+    noResults.textContent = "No matching tabs found";
+    searchResults.appendChild(noResults);
     closeAllBtn.style.display = "none";
     return;
   }
 
-  // Display matching tabs
-  const resultsHTML = matchingTabs
-    .map((tab) => {
-      const favicon =
-        tab.favIconUrl ||
-        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌐</text></svg>";
-      const title = tab.title || "Untitled";
-      const url = tab.url || "";
-      const domain = url ? new URL(url).hostname : "";
+  // Clear and display matching tabs safely
+  searchResults.textContent = "";
+  matchingTabs.forEach((tab) => {
+    const favicon =
+      tab.favIconUrl ||
+      "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌐</text></svg>";
+    const title = tab.title || "Untitled";
+    const url = tab.url || "";
+    let domain = "";
+    try {
+      domain = url ? new URL(url).hostname : "";
+    } catch {
+      domain = url;
+    }
 
-      return `
-        <div class="search-result-item" data-tab-id="${tab.id}">
-          <img src="${favicon}" class="tab-favicon" alt="favicon" />
-          <div class="tab-info">
-            <div class="tab-title">${title}</div>
-            <div class="tab-url">${domain}</div>
-          </div>
-          <button class="tab-close-btn" data-tab-id="${tab.id}" title="Close tab">×</button>
-        </div>
-      `;
-    })
-    .join("");
+    const resultItem = document.createElement("div");
+    resultItem.className = "search-result-item";
+    resultItem.dataset.tabId = String(tab.id);
 
-  searchResults.innerHTML = resultsHTML;
+    const faviconImg = document.createElement("img");
+    faviconImg.className = "tab-favicon";
+    faviconImg.alt = "favicon";
+    faviconImg.src = favicon;
+
+    const tabInfo = document.createElement("div");
+    tabInfo.className = "tab-info";
+
+    const tabTitle = document.createElement("div");
+    tabTitle.className = "tab-title";
+    tabTitle.textContent = title;
+
+    const tabUrl = document.createElement("div");
+    tabUrl.className = "tab-url";
+    tabUrl.textContent = domain;
+
+    tabInfo.appendChild(tabTitle);
+    tabInfo.appendChild(tabUrl);
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "tab-close-btn";
+    closeBtn.dataset.tabId = String(tab.id);
+    closeBtn.title = "Close tab";
+    closeBtn.textContent = "×";
+
+    resultItem.appendChild(faviconImg);
+    resultItem.appendChild(tabInfo);
+    resultItem.appendChild(closeBtn);
+
+    searchResults.appendChild(resultItem);
+  });
 
   // Show and update close all button
   closeAllBtn.textContent = `Close All (${matchingTabs.length})`;
@@ -150,10 +181,10 @@ function searchTabs(query: string) {
   // Add click handlers for individual tabs and close buttons
   matchingTabs.forEach((tab) => {
     const tabElement = document.querySelector(
-      `[data-tab-id="${tab.id}"].search-result-item`,
+      `[data-tab-id="${tab.id}"].search-result-item`
     );
     const closeBtn = document.querySelector(
-      `.tab-close-btn[data-tab-id="${tab.id}"]`,
+      `.tab-close-btn[data-tab-id="${tab.id}"]`
     );
 
     if (tabElement) {
@@ -164,36 +195,34 @@ function searchTabs(query: string) {
         }
 
         // For now, clicking on the tab item will switch to it instead of closing
-        chrome.runtime.sendMessage(
-          {
+        browser.runtime
+          .sendMessage({
             type: "SWITCH_TO_TAB",
             tabId: tab.id,
-          },
-          (response) => {
+          })
+          .then(() => {
             // console.log("Switch to tab response:", response);
             // Close the popup after switching
             window.close();
-          },
-        );
+          });
       });
     }
 
     if (closeBtn) {
       closeBtn.addEventListener("click", (e) => {
         e.stopPropagation(); // Prevent triggering the tab click
-        chrome.runtime.sendMessage(
-          {
+        browser.runtime
+          .sendMessage({
             type: "CLOSE_TAB",
             tabId: tab.id,
-          },
-          (response) => {
+          })
+          .then(() => {
             // console.log("Individual tab close response:", response);
             // Update the tab count and refresh allTabs data, then refresh search
             updateTabCount(() => {
               searchTabs(query);
             });
-          },
-        );
+          });
       });
     }
   });

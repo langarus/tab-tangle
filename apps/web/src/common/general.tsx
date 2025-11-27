@@ -18,14 +18,13 @@ const useGeneral = () => {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   useEffect(() => {
-    // Check if Chrome runtime is available (we're in a Chrome context)
-    if (typeof chrome !== "undefined" && chrome.runtime) {
-      console.log("Chrome runtime detected, setting up connection listener");
-      setupExtensionCommunication();
-    } else {
-      console.log("Chrome runtime not available - extension features disabled");
-      setIsConnected(false);
-    }
+    // Always set up extension communication - we'll detect the extension via CustomEvents
+    // The content script will send an EXTENSION_CONNECTED event if it's available
+    const cleanup = setupExtensionCommunication();
+
+    return () => {
+      cleanup?.();
+    };
   }, []);
 
   const setupExtensionCommunication = () => {
@@ -33,7 +32,15 @@ const useGeneral = () => {
     const handleExtensionMessage = (event: CustomEvent) => {
       const { type, data } = event.detail;
 
-      if (type === "TABS_UPDATE") {
+      if (type === "EXTENSION_CONNECTED") {
+        setIsConnected(true);
+        // Request initial tabs when extension connects
+        window.dispatchEvent(
+          new CustomEvent("dashboardMessage", {
+            detail: { type: "REQUEST_TABS" },
+          })
+        );
+      } else if (type === "TABS_UPDATE") {
         setTabs(data.tabs);
         setLastUpdate(new Date(data.timestamp));
         setIsConnected(true);
