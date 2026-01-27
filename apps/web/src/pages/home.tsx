@@ -46,9 +46,9 @@ export const HomePage = () => {
       <section className="relative overflow-hidden pt-20 pb-32 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center animate-fade-in">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
               Tame Your
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 leading-tight pb-1">
                 Tab Tangle
               </span>
             </h1>
@@ -277,8 +277,8 @@ export const HomePage = () => {
                 Install Extension
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Add Tab Tangle to your Chrome browser from the Chrome Web Store.
-                It's free and takes just seconds.
+                Add Tab Tangle to your browser (Chrome, Firefox, or Edge) from
+                the extension store. It's free and takes just seconds.
               </p>
             </div>
 
@@ -321,15 +321,38 @@ export const HomePage = () => {
             Join thousands of users who have taken control of their browsing
             experience.
           </p>
+          <div className="mb-8">
+            <p className="text-blue-100 text-lg mb-4 font-medium">
+              Install Tab Tangle:
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="https://chromewebstore.google.com/detail/tab-tangle/glflinnnffehfcoppoelhapbiclbkaap"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Chrome
+              </a>
+              <a
+                href="https://addons.mozilla.org/en-US/firefox/addon/tab-tangle/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-white text-orange-600 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Firefox
+              </a>
+              <a
+                href="https://microsoftedge.microsoft.com/addons/detail/tab-tangle/bjodmggncigdnbhhmjpkblmnajhpnlmf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-white text-blue-700 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Edge
+              </a>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://chrome.google.com/webstore"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-            >
-              Install Extension
-            </a>
             <a
               href="/app"
               className="px-8 py-4 bg-blue-700 text-white rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl border border-blue-500 transform hover:-translate-y-0.5 transition-all duration-200"

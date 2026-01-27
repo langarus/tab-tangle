@@ -1,10 +1,8 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { useGeneralCtx } from "../common/general";
 
 export function FilterDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const router = useRouterState();
@@ -12,53 +10,6 @@ export function FilterDropdown() {
   const searchParams = router.location.search as {
     q?: string;
     duplicates?: boolean;
-  };
-  const { tabs, handleSelectTabs, resetSelection } = useGeneralCtx();
-
-  // Get current page URL to exclude the dashboard tab itself
-  const currentPageUrl =
-    typeof window !== "undefined" ? window.location.href : "";
-  const currentPageUrlNormalized = currentPageUrl
-    ?.split("?")[0]
-    ?.split("#")[0]
-    ?.toLowerCase();
-  if (!currentPageUrlNormalized) return null;
-
-  // Filter out the current tab and get search results count
-  const searchResultsCount = useMemo(() => {
-    if (!searchParams?.q) return 0;
-    const query = searchParams.q.toLowerCase().trim();
-    const filteredTabs = tabs.filter((tab) => {
-      if (!tab.url) return false;
-      const tabUrlNormalized = tab.url
-        ?.split("?")[0]
-        ?.split("#")[0]
-        ?.toLowerCase();
-      if (!tabUrlNormalized) return false;
-      if (tabUrlNormalized === currentPageUrlNormalized) return false;
-      const title = (tab.title || "").toLowerCase();
-      const url = (tab.url || "").toLowerCase() || "";
-      return title.includes(query) || url.includes(query);
-    });
-    return filteredTabs.length;
-  }, [tabs, searchParams?.q, currentPageUrlNormalized]);
-
-  const handleSelectAllSearch = () => {
-    if (!searchParams?.q) return;
-    const query = searchParams.q.toLowerCase().trim();
-    const filteredTabs = tabs.filter((tab) => {
-      if (!tab.url) return false;
-      const tabUrlNormalized = tab?.url
-        ?.split("?")[0]
-        ?.split("#")[0]
-        ?.toLowerCase();
-      if (tabUrlNormalized === currentPageUrlNormalized) return false;
-      const title = (tab.title || "").toLowerCase();
-      const url = (tab.url || "").toLowerCase();
-      return title.includes(query) || url.includes(query);
-    });
-    resetSelection();
-    handleSelectTabs(filteredTabs);
   };
 
   // Close dropdown when clicking outside
@@ -81,50 +32,24 @@ export function FilterDropdown() {
     };
   }, [isOpen]);
 
-  // Sync search query with URL params
+  // Close dropdown when duplicates is toggled
   useEffect(() => {
-    if (currentPath === "/app/filtered" && searchParams) {
-      if (searchParams.q) {
-        setSearchQuery(searchParams.q);
-      }
-      if (searchParams.duplicates) {
-        setIsOpen(false);
-      }
-    } else {
-      setSearchQuery("");
+    if (currentPath === "/app/filtered" && searchParams?.duplicates) {
+      setIsOpen(false);
     }
-  }, [currentPath, searchParams]);
-
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-    if (value.trim()) {
-      navigate({
-        to: "/app/filtered",
-        search: { q: value.trim(), duplicates: false },
-      });
-    } else if (searchParams?.duplicates) {
-      // Keep duplicates view if it was active
-      navigate({
-        to: "/app/filtered",
-        search: { duplicates: true, q: "" },
-      });
-    } else {
-      // Go back to home if no filters
-      navigate({ to: "/app" });
-    }
-  };
+  }, [currentPath, searchParams?.duplicates]);
 
   const handleShowDuplicates = (show: boolean) => {
     if (show) {
       navigate({
         to: "/app/filtered",
-        search: { duplicates: true, q: searchQuery || "" },
+        search: { duplicates: true, q: searchParams?.q || "" },
       });
     } else {
-      if (searchQuery.trim()) {
+      if (searchParams?.q?.trim()) {
         navigate({
           to: "/app/filtered",
-          search: { q: searchQuery.trim(), duplicates: false },
+          search: { q: searchParams.q.trim(), duplicates: false },
         });
       } else {
         navigate({ to: "/app" });
@@ -133,7 +58,7 @@ export function FilterDropdown() {
     setIsOpen(false);
   };
 
-  const isFilterActive = searchParams?.q || searchParams?.duplicates;
+  const isFilterActive = searchParams?.duplicates;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -176,7 +101,7 @@ export function FilterDropdown() {
             />
           </svg>
         )}
-        {isFilterActive && !searchParams?.q && (
+        {isFilterActive && (
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs text-white">
             !
           </span>
@@ -185,84 +110,8 @@ export function FilterDropdown() {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="fixed bottom-24 right-8 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="fixed bottom-24 right-8 z-50 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           <div className="p-4">
-            {/* Search Input */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Search tabs
-                </label>
-                {searchParams?.q && searchResultsCount > 0 && (
-                  <button
-                    onClick={handleSelectAllSearch}
-                    className="px-2.5 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded-full transition-colors flex items-center gap-1.5"
-                  >
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Select All ({searchResultsCount})
-                  </button>
-                )}
-              </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  placeholder="Search by title or URL..."
-                  className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  autoFocus
-                />
-                <svg
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                {searchQuery && (
-                  <button
-                    onClick={() => handleSearchChange("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="border-t border-gray-200 my-4"></div>
-
             {/* Show Duplicates Toggle */}
             <div className="flex items-center justify-between">
               <div>
