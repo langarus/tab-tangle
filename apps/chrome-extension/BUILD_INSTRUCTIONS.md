@@ -13,6 +13,7 @@
 Download and install Node.js from https://nodejs.org/ (version 18 or higher)
 
 Verify installation:
+
 ```bash
 node --version
 ```
@@ -24,6 +25,7 @@ npm install -g pnpm
 ```
 
 Verify installation:
+
 ```bash
 pnpm --version
 ```
@@ -43,6 +45,7 @@ pnpm install
 ```
 
 This will install all required dependencies listed in `package.json`, including:
+
 - vite (build tool)
 - typescript (compiler)
 - webextension-polyfill (cross-browser compatibility)
@@ -54,6 +57,7 @@ pnpm run build-firefox
 ```
 
 This command:
+
 - Compiles TypeScript files to JavaScript
 - Bundles the code using Vite
 - Copies the Firefox-specific manifest and static assets
@@ -62,6 +66,7 @@ This command:
 ### 4. Verify the build
 
 The `dist-firefox/` directory should contain:
+
 - `manifest.json` (Firefox-specific manifest)
 - `background.js` (background script)
 - `content.js` (content script)
@@ -79,6 +84,7 @@ The build process is automated through the scripts defined in `package.json`:
 ```
 
 The build configuration is defined in `vite.config.ts`, which:
+
 - Sets the output directory to `dist-firefox` when mode is `firefox`
 - Copies `src/manifest.firefox.json` as `manifest.json`
 - Copies static assets (icons, HTML files, polyfill)
@@ -112,5 +118,3 @@ apps/chrome-extension/
 - The Firefox build uses a different manifest (`manifest.firefox.json`) than Chrome due to browser-specific requirements
 - No external services or APIs are called during the build process
 - The build is deterministic and should produce identical output given the same source code and dependency versions
-
-

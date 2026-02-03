@@ -1,81 +1,144 @@
-# Turborepo starter
+# Tab Tangle 🐱
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Tame your wild tabs.** A privacy-first browser extension for recovering tab hoarders.
 
-## Using this example
+Your browser looks like a squeezed accordion. You have 47 tabs open and you're scared to close any of them. Sound familiar?
 
-Run the following command:
+Tab Tangle helps you wrangle the chaos — with a little help from some friendly cats.
 
-```sh
-npx create-turbo@latest
-```
+> No tracking. No data collection. Your tabs stay on your device, where they belong.
 
-## What's inside?
+## Features
 
-This Turborepo includes the following packages/apps:
+- **Visual Dashboard** — See all your tabs organized by timeline, windows, or domains
+- **Instant Search** — Find any tab in milliseconds (yes, even that recipe from 3 weeks ago)
+- **Duplicate Detection** — Spot and squash duplicate tabs with one click
+- **Bulk Actions** — Close 20 tabs at once. It's okay. Let them go.
+- **Cat-Named Windows** — Your browser windows are now managed by Whiskers, Luna, Oliver, and friends 🐈
+- **Dark Mode** — For late-night tab hunting
 
-### Apps and Packages
+## Installation
 
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Get the extension:**
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+| Browser | Link |
+|---------|------|
+| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/tab-tangle/glflinnnffehfcoppoelhapbiclbkaap) |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tab-tangle/) |
+| Edge | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tab-tangle/bjodmggncigdnbhhmjpkblmnajhpnlmf) |
 
-### Utilities
+**Use the dashboard:** [tab-tangle.com](https://www.tab-tangle.com)
 
-This Turborepo has some additional tools already setup for you:
+## How It Works
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+Tab Tangle uses a neat trick: the extension is just a lightweight messenger. The real magic happens in a full web dashboard.
 
 ```
-cd my-turborepo
+🧩 Extension          →  listens to your tabs
+📨 Content Script     →  bridges the communication
+🖥️ Web Dashboard      →  where you actually see and manage everything
+```
+
+Why? Because web apps are nicer than tiny popups. And we can update the dashboard without waiting for extension store reviews.
+
+## Development
+
+### Prerequisites
+
+- Node.js >= 18
+- pnpm >= 9.0.0
+
+### Quick Start
+
+```bash
+# Clone it
+git clone https://github.com/langarus/tab-tangle.git
+cd tab-tangle
+
+# Install dependencies
+pnpm install
+
+# Start development
 pnpm dev
 ```
 
-### Remote Caching
+This runs:
+- Web dashboard at `http://localhost:3002`
+- Extension build in watch mode
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Building
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```bash
+pnpm build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Outputs:
+- `apps/web/dist/` — Web dashboard
+- `apps/chrome-extension/dist-chrome/` — Chrome extension
+- `apps/chrome-extension/dist-firefox/` — Firefox extension
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### Loading the Extension Locally
+
+**Chrome:**
+1. Go to `chrome://extensions`
+2. Enable "Developer mode"
+3. Click "Load unpacked" → select `apps/chrome-extension/dist-chrome`
+
+**Firefox:**
+1. Go to `about:debugging#/runtime/this-firefox`
+2. Click "Load Temporary Add-on" → select `apps/chrome-extension/dist-firefox/manifest.json`
+
+### Environment Variables
+
+```bash
+cp apps/web/.env.example apps/web/.env
+```
+
+Firebase config is optional — only needed if you want auth features.
+
+## Project Structure
 
 ```
-npx turbo link
+tab-tangle/
+├── apps/
+│   ├── web/                 # React dashboard (Vite + TailwindCSS)
+│   └── chrome-extension/    # Browser extension (works on Chrome/Firefox/Edge)
+└── packages/
+    ├── eslint-config/       # Shared lint rules
+    └── typescript-config/   # Shared TS config
 ```
 
-## Useful Links
+## Privacy
 
-Learn more about the power of Turborepo:
+This is a **privacy-first** project:
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- All data stays in your browser
+- No analytics, no tracking, no telemetry
+- No accounts required
+- Nothing leaves your device
+- Open source — don't trust us, verify
+
+## Tech Stack
+
+- React 18 + TypeScript
+- TailwindCSS
+- Vite + Turborepo
+- WebExtension API with browser-polyfill
+
+## Contributing
+
+Found a bug? Want a feature? PRs welcome!
+
+## Support
+
+If Tab Tangle helped you tame your tabs, consider buying me a coffee:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/chaos67)
+
+## License
+
+[MIT](LICENSE) — do whatever you want with it.
+
+---
+
+*Built for tab hoarders, by a recovering tab hoarder.* 🐱

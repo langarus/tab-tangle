@@ -1,65 +1,51 @@
-# Tab Dashboard
+# Tab Tangle - Web Dashboard
 
-A React web application that displays tab information received from the Chrome extension.
+React web application that serves as the visual dashboard for Tab Tangle.
 
 ## Features
 
-- Real-time display of Chrome tabs
-- Grouped by browser windows
-- Shows tab titles, URLs, and favicons
-- Live connection status
-- Server-sent events for real-time updates
+- Real-time display of browser tabs
+- Multiple view modes: Timeline, Windows, Domains
+- Instant search across all tabs
+- Duplicate tab detection
+- Bulk close operations
+- Dark mode support
 
 ## Development
 
-### Start the development server
-
 ```bash
+# From the root of the monorepo
 pnpm dev
+
+# Or directly
+cd apps/web && pnpm dev
 ```
 
-This will start the React development server on port 3002.
-
-### Development Mode
-
-The dashboard runs as a single Vite development server - no separate API server needed since we use Chrome's runtime messaging for communication.
+The dashboard runs on `http://localhost:3002`.
 
 ## Architecture
 
-The app consists of two parts:
+The dashboard communicates with the browser extension via a content script bridge:
 
-### API Server (`server.js`)
+1. **Content Script** (`content.ts` in the extension) injects into the dashboard page
+2. **CustomEvents** pass messages between the dashboard and content script
+3. **Extension Background** manages actual tab operations
 
-- Express.js server running on port 3001
-- Receives tab data from Chrome extension via POST `/api/tabs`
-- Provides health check endpoint at `/api/health`
-- Streams real-time updates via Server-Sent Events at `/api/tabs/stream`
+This architecture allows:
+- Rich web app UI (not limited by extension popup constraints)
+- Easy updates (no extension store review needed for dashboard changes)
+- Separation of concerns
 
-### React Frontend
+## Communication Protocol
 
-- Vite + React app running on port 3002
-- Displays tab information in a clean, organized interface
-- Uses Tailwind CSS for styling
-- Connects to API server via proxy configuration
+| Event | Direction | Purpose |
+|-------|-----------|---------|
+| `TABS_UPDATE` | Extension → Dashboard | Send current tab list |
+| `REQUEST_TABS` | Dashboard → Extension | Request fresh tab data |
+| `CLOSE_TAB` | Dashboard → Extension | Close a single tab |
+| `CLOSE_TABS` | Dashboard → Extension | Close multiple tabs |
+| `SWITCH_TO_TAB` | Dashboard → Extension | Focus a specific tab |
 
-## API Endpoints
+## Environment Variables
 
-- `GET /api/health` - Health check
-- `POST /api/tabs` - Receive tabs from extension
-- `GET /api/tabs` - Get current tabs
-- `GET /api/tabs/stream` - Server-sent events stream
-
-## Usage
-
-1. Start the dashboard: `pnpm dev`
-2. Load the Chrome extension
-3. Use the extension to send tabs to the dashboard
-4. View real-time tab updates in the web interface
-
-## Files Structure
-
-- `server.js` - Express API server
-- `src/App.tsx` - Main React component
-- `src/components/TabList.tsx` - Tab display component
-- `src/types.ts` - TypeScript type definitions
-- `vite.config.ts` - Vite configuration with API proxy
+See `.env.example` for available configuration options.
