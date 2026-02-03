@@ -61,10 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((tab) => tab.id)
       .filter((id) => id !== undefined) as number[];
 
-    // console.log("Close all clicked - Query:", query);
-    // console.log("Matching tabs:", matchingTabs);
-    // console.log("Tab IDs to close:", tabIds);
-
     if (tabIds.length > 0) {
       browser.runtime.sendMessage(
         {
@@ -79,8 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
           updateTabCount();
         }
       );
-    } else {
-      // console.log("No valid tab IDs to close");
     }
   });
 });
@@ -201,8 +195,6 @@ function searchTabs(query: string) {
             tabId: tab.id,
           })
           .then(() => {
-            // console.log("Switch to tab response:", response);
-            // Close the popup after switching
             window.close();
           });
       });
@@ -217,8 +209,6 @@ function searchTabs(query: string) {
             tabId: tab.id,
           })
           .then(() => {
-            // console.log("Individual tab close response:", response);
-            // Update the tab count and refresh allTabs data, then refresh search
             updateTabCount(() => {
               searchTabs(query);
             });

@@ -35,9 +35,9 @@ export function Domains() {
       {Object.entries(groupedTabs).map(([domain, domainTabs]) => (
         <div
           key={domain}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6 break-inside-avoid"
+          className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden mb-6 break-inside-avoid"
         >
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 border-b border-gray-200">
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/30 px-4 py-2 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 min-w-0 flex-1">
                 <div className="h-10 w-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -71,12 +71,12 @@ export function Domains() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h2
-                    className="text-lg font-semibold text-gray-900 truncate"
+                    className="text-lg font-semibold text-gray-900 dark:text-white truncate"
                     title={domain}
                   >
                     {domain}
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {domainTabs.length}{" "}
                     {domainTabs.length === 1 ? "tab" : "tabs"}
                   </p>
@@ -85,7 +85,7 @@ export function Domains() {
               <button
                 title="Close all tabs in this domain"
                 onClick={(e) => handleCloseGroup(domainTabs, e)}
-                className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm flex-shrink-0 ml-2"
+                className="h-8 w-8 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 hover:shadow-sm flex-shrink-0 ml-2"
               >
                 <svg
                   className="h-4 w-4"

@@ -3,6 +3,7 @@ import { useGeneralCtx } from "../common/general";
 import { ModeSelector } from "./ModeSelector";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { FilterDropdown } from "./FilterDropdown";
+import { ThemeSelector } from "./ThemeSelector";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const {
@@ -33,25 +34,23 @@ export const Layout = ({ children }: PropsWithChildren) => {
   const isInfoPage = currentPath === "/app/about" || currentPath === "/app/privacy";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900 flex flex-col">
       {!isLandingPage && (
-        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
+        <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-950/90 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-800 shadow-sm">
           <div className="container mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <Link to="/app">
                 <div className="flex items-center space-x-3">
-                  {/* <div className="h-8 w-8  rounded-lg flex items-center justify-center"> */}
                   <img
                     src="/img/favicon.svg"
                     alt="Tab Tangle Logo"
                     className="h-14 w-14"
                   />
-                  {/* </div> */}
                   <div>
-                    <h1 className="text-xl font-bold text-gray-900">
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                       Tab Tangle
                     </h1>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {tabs.length} open tabs
                     </p>
                   </div>
@@ -62,8 +61,8 @@ export const Layout = ({ children }: PropsWithChildren) => {
                   to="/app/about"
                   className={`text-sm font-medium transition-colors ${
                     currentPath === "/app/about"
-                      ? "text-blue-600 font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "text-blue-600 dark:text-blue-400 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   }`}
                 >
                   About
@@ -72,17 +71,18 @@ export const Layout = ({ children }: PropsWithChildren) => {
                   to="/app/privacy"
                   className={`text-sm font-medium transition-colors ${
                     currentPath === "/app/privacy"
-                      ? "text-blue-600 font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "text-blue-600 dark:text-blue-400 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   }`}
                 >
                   Privacy
                 </Link>
+                <ThemeSelector />
                 <div
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
                     isConnected
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
+                      ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
+                      : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300"
                   }`}
                 >
                   {isConnected ? "Connected" : "Disconnected"}
@@ -103,11 +103,11 @@ export const Layout = ({ children }: PropsWithChildren) => {
               </div>
             )}
             {!isConnected && !isInfoPage ? (
-              <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="text-lg font-medium text-blue-900 mb-2">
+              <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="text-lg font-medium text-blue-900 dark:text-blue-200 mb-2">
                   Getting Started
                 </h3>
-                <ol className="list-decimal list-inside space-y-2 text-blue-800">
+                <ol className="list-decimal list-inside space-y-2 text-blue-800 dark:text-blue-300">
                   <li>Install the Tab Tangle extension</li>
                   <li>
                     Make sure this page is open at https://www.tab-tangle.com/app
@@ -154,10 +154,10 @@ export const Layout = ({ children }: PropsWithChildren) => {
 
       {/* Footer */}
       {!isLandingPage && (
-        <footer className="border-t border-gray-200 bg-white/50 mt-auto">
+        <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-950/50 mt-auto">
           <div className="container mx-auto px-6 py-8">
             <div className="flex flex-wrap justify-between items-center gap-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
                 © {new Date().getFullYear()} Tab Tangle. Tame your tabs.
               </div>
               <div className="flex gap-6 text-sm">
@@ -165,8 +165,8 @@ export const Layout = ({ children }: PropsWithChildren) => {
                   to="/app/about"
                   className={
                     currentPath === "/app/about"
-                      ? "text-blue-600 font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "text-blue-600 dark:text-blue-400 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   }
                 >
                   About
@@ -175,8 +175,8 @@ export const Layout = ({ children }: PropsWithChildren) => {
                   to="/app/privacy"
                   className={
                     currentPath === "/app/privacy"
-                      ? "text-blue-600 font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "text-blue-600 dark:text-blue-400 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   }
                 >
                   Privacy

@@ -112,23 +112,21 @@ export function Windows() {
         return (
           <div
             key={windowIdStr}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden"
           >
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  {/* <div className="h-10 w-10 bg-white rounded-lg flex items-center justify-center shadow-sm"> */}
                   <img
                     src={windowIcon}
                     alt={`${windowName} icon`}
                     className="h-10 w-10"
                   />
-                  {/* </div> */}
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {windowName} Window
                     </h2>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {windowTabs.length}{" "}
                       {windowTabs.length === 1 ? "tab" : "tabs"}
                     </p>
@@ -137,7 +135,7 @@ export function Windows() {
                 <button
                   title="Close all tabs in this window"
                   onClick={(e) => handleCloseGroup(windowTabs, e)}
-                  className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm"
+                  className="h-8 w-8 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 hover:shadow-sm"
                 >
                   <svg
                     className="h-4 w-4"

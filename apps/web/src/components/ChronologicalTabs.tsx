@@ -12,6 +12,9 @@ interface TimeGroup {
   color: string;
   bgColor: string;
   borderColor: string;
+  darkBgColor: string;
+  darkBorderColor: string;
+  darkColor: string;
   iconUrl: string;
 }
 
@@ -23,8 +26,8 @@ function ChronologicalTabs() {
   if (validTabs.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-400 text-lg mb-2">No tabs received yet</div>
-        <div className="text-gray-500 text-sm">
+        <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">No tabs received yet</div>
+        <div className="text-gray-500 dark:text-gray-400 text-sm">
           Make sure your Chrome extension is running and click "Send Tabs to
           Dashboard"
         </div>
@@ -47,6 +50,9 @@ function ChronologicalTabs() {
         color: "text-green-700",
         bgColor: "bg-green-50",
         borderColor: "border-green-200",
+        darkColor: "dark:text-green-400",
+        darkBgColor: "dark:bg-green-900/30",
+        darkBorderColor: "dark:border-green-800",
         iconUrl: age1Url,
       },
       {
@@ -55,6 +61,9 @@ function ChronologicalTabs() {
         color: "text-blue-700",
         bgColor: "bg-blue-50",
         borderColor: "border-blue-200",
+        darkColor: "dark:text-blue-400",
+        darkBgColor: "dark:bg-blue-900/30",
+        darkBorderColor: "dark:border-blue-800",
         iconUrl: age2Url,
       },
       {
@@ -63,6 +72,9 @@ function ChronologicalTabs() {
         color: "text-yellow-700",
         bgColor: "bg-yellow-50",
         borderColor: "border-yellow-200",
+        darkColor: "dark:text-yellow-400",
+        darkBgColor: "dark:bg-yellow-900/30",
+        darkBorderColor: "dark:border-yellow-800",
         iconUrl: age3Url,
       },
       {
@@ -71,6 +83,9 @@ function ChronologicalTabs() {
         color: "text-orange-700",
         bgColor: "bg-orange-50",
         borderColor: "border-orange-200",
+        darkColor: "dark:text-orange-400",
+        darkBgColor: "dark:bg-orange-900/30",
+        darkBorderColor: "dark:border-orange-800",
         iconUrl: age4Url,
       },
       {
@@ -79,6 +94,9 @@ function ChronologicalTabs() {
         color: "text-red-700",
         bgColor: "bg-red-50",
         borderColor: "border-red-200",
+        darkColor: "dark:text-red-400",
+        darkBgColor: "dark:bg-red-900/30",
+        darkBorderColor: "dark:border-red-800",
         iconUrl: age4Url,
       },
     ];
@@ -137,29 +155,25 @@ function ChronologicalTabs() {
       {timeGroups.map((group) => (
         <div
           key={group.label}
-          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+          className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden"
         >
           <div
-            className={`${group.bgColor} px-4 py-3 border-b ${group.borderColor}`}
+            className={`${group.bgColor} ${group.darkBgColor} px-4 py-3 border-b ${group.borderColor} ${group.darkBorderColor}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3 min-w-0 flex-1">
-                {/* <div
-                  className={`h-8 w-8 ${group.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
-                > */}
                 <img
                   src={group.iconUrl}
                   alt={`${group.label} icon`}
                   className="h-10 w-10"
                 />
-                {/* </div> */}
                 <div className="min-w-0 flex-1">
                   <h2
-                    className={`text-lg font-semibold ${group.color} truncate`}
+                    className={`text-lg font-semibold ${group.color} ${group.darkColor} truncate`}
                   >
                     {group.label}
                   </h2>
-                  <p className={`text-sm ${group.color} opacity-75`}>
+                  <p className={`text-sm ${group.color} ${group.darkColor} opacity-75`}>
                     {group.tabs.length}{" "}
                     {group.tabs.length === 1 ? "tab" : "tabs"}
                   </p>
@@ -168,7 +182,7 @@ function ChronologicalTabs() {
               <button
                 title={`Close all tabs in ${group.label.toLowerCase()}`}
                 onClick={(e) => handleCloseGroup(group.tabs, e)}
-                className="h-8 w-8 rounded-lg bg-white/80 hover:bg-red-50 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-all duration-200 hover:shadow-sm flex-shrink-0 ml-2"
+                className="h-8 w-8 rounded-lg bg-white/80 dark:bg-gray-800/80 hover:bg-red-50 dark:hover:bg-red-900/30 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 hover:shadow-sm flex-shrink-0 ml-2"
               >
                 <svg
                   className="h-4 w-4"
@@ -192,7 +206,7 @@ function ChronologicalTabs() {
                 <div key={tab.id} className="animate-fade-in">
                   <TabCard tab={tab} onClose={handleClose} />
                   {tab.lastAccessed && (
-                    <div className="px-3 pb-2 text-xs text-gray-500 text-center">
+                    <div className="px-3 pb-2 text-xs text-gray-500 dark:text-gray-400 text-center">
                       {formatTimeAgo(tab.lastAccessed)}
                     </div>
                   )}

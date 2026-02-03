@@ -120,10 +120,10 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
     <>
       <div
         ref={cardRef}
-        className={`group relative bg-gradient-to-br from-white to-gray-50 border rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 ease-out transform hover:-translate-y-1 ${
+        className={`group relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 border rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 ease-out transform hover:-translate-y-1 ${
           isSelected
-            ? "border-green-400 bg-gradient-to-br from-green-50 to-green-100 shadow-green-200/50"
-            : "border-gray-200 hover:border-gray-300"
+            ? "border-amber-400 dark:border-amber-500 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 shadow-amber-200/50 dark:shadow-amber-900/30"
+            : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
         } ${className}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -134,7 +134,7 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
             tab.id &&
             onClose(tab.id, e, selectedTabs, isSelectMode, resetSelection)
           }
-          className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100/80 hover:bg-red-500 text-gray-500 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
+          className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100/80 dark:bg-gray-800/80 hover:bg-red-500 text-gray-500 dark:text-gray-400 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
           title="Close tab"
         >
           <svg
@@ -158,7 +158,7 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
         {!isSelected && (
           <button
             onClick={handleCheckboxClick}
-            className="absolute top-3 right-12 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100/80 hover:bg-blue-500 text-gray-500 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
+            className="absolute top-3 right-12 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100/80 dark:bg-gray-800/80 hover:bg-amber-500 text-gray-500 dark:text-gray-400 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 backdrop-blur-sm z-10"
             title="Select tab"
           >
             <div className="w-3 h-3 border-2 border-current rounded-sm"></div>
@@ -193,17 +193,17 @@ export function TabCard({ tab, onClose, className = "" }: TabCardProps) {
               <h3
                 className={`font-semibold text-base leading-snug mb-2 truncate pr-4 ${
                   isSelected
-                    ? "text-green-700"
+                    ? "text-amber-700 dark:text-amber-400"
                     : tab.active
-                      ? "text-blue-600"
-                      : "text-gray-900"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-900 dark:text-gray-100"
                 }`}
               >
                 {tab.title || "Untitled"}
               </h3>
               <p
                 className={`text-sm truncate leading-relaxed ${
-                  isSelected ? "text-green-600" : "text-gray-500"
+                  isSelected ? "text-amber-600 dark:text-amber-400" : "text-gray-500 dark:text-gray-400"
                 }`}
               >
                 {tab.url ? getDomainFromUrl(tab.url) : ""}

@@ -225,8 +225,8 @@ export function FilteredResults() {
     if (groupedDuplicates && groupedDuplicates.length === 0) {
       return (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-lg mb-2">No duplicates found</div>
-          <div className="text-gray-500 text-sm">All your tabs are unique</div>
+          <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">No duplicates found</div>
+          <div className="text-gray-500 dark:text-gray-400 text-sm">All your tabs are unique</div>
         </div>
       );
     }
@@ -238,22 +238,22 @@ export function FilteredResults() {
           return (
             <div
               key={group.url}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+              className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden"
             >
-              <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+              <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border-b border-blue-100 dark:border-blue-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {group.url}
                     </h2>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       {group.tabs.length} duplicate
                       {group.tabs.length > 1 ? "s" : ""}
                     </p>
                   </div>
                   <button
                     onClick={() => handleGroupCheckboxClick(group.tabs)}
-                    className="flex-shrink-0 w-5 h-5 border-2 rounded flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                    className="flex-shrink-0 w-5 h-5 border-2 rounded flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 transition-colors"
                     style={{
                       borderColor:
                         checkboxState === "deselected" ? "#d1d5db" : "#2563eb",
@@ -326,10 +326,10 @@ export function FilteredResults() {
     if (searchFilteredTabs.length === 0) {
       return (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-lg mb-2">
+          <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">
             No matching tabs found
           </div>
-          <div className="text-gray-500 text-sm">
+          <div className="text-gray-500 dark:text-gray-400 text-sm">
             Try a different search term
           </div>
         </div>
@@ -339,10 +339,10 @@ export function FilteredResults() {
     return (
       <div>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Search Results
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Found {searchFilteredTabs.length} tab
             {searchFilteredTabs.length !== 1 ? "s" : ""} matching "
             {searchParams.q}"
