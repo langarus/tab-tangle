@@ -8,6 +8,8 @@ Tab Tangle helps you wrangle the chaos — with a little help from some friendly
 
 > No tracking. No data collection. Your tabs stay on your device, where they belong.
 
+https://github.com/user-attachments/assets/9c818a65-55d8-46db-bc79-c30ac1d92a07
+
 ## Features
 
 - **Visual Dashboard** — See all your tabs organized by timeline, windows, or domains
