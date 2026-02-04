@@ -23,11 +23,11 @@ https://github.com/user-attachments/assets/9c818a65-55d8-46db-bc79-c30ac1d92a07
 
 **Get the extension:**
 
-| Browser | Link |
-|---------|------|
-| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/tab-tangle/glflinnnffehfcoppoelhapbiclbkaap) |
-| Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tab-tangle/) |
-| Edge | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tab-tangle/bjodmggncigdnbhhmjpkblmnajhpnlmf) |
+| Browser | Link                                                                                                          |
+| ------- | ------------------------------------------------------------------------------------------------------------- |
+| Chrome  | [Chrome Web Store](https://chromewebstore.google.com/detail/tab-tangle/glflinnnffehfcoppoelhapbiclbkaap)      |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tab-tangle/)                                 |
+| Edge    | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tab-tangle/bjodmggncigdnbhhmjpkblmnajhpnlmf) |
 
 **Use the dashboard:** [tab-tangle.com](https://www.tab-tangle.com)
 
@@ -65,6 +65,7 @@ pnpm dev
 ```
 
 This runs:
+
 - Web dashboard at `http://localhost:3002`
 - Extension build in watch mode
 
@@ -75,6 +76,7 @@ pnpm build
 ```
 
 Outputs:
+
 - `apps/web/dist/` — Web dashboard
 - `apps/chrome-extension/dist-chrome/` — Chrome extension
 - `apps/chrome-extension/dist-firefox/` — Firefox extension
@@ -82,11 +84,13 @@ Outputs:
 ### Loading the Extension Locally
 
 **Chrome:**
+
 1. Go to `chrome://extensions`
 2. Enable "Developer mode"
 3. Click "Load unpacked" → select `apps/chrome-extension/dist-chrome`
 
 **Firefox:**
+
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Add-on" → select `apps/chrome-extension/dist-firefox/manifest.json`
 
@@ -143,4 +147,4 @@ If Tab Tangle helped you tame your tabs, consider buying me a coffee:
 
 ---
 
-*Built for tab hoarders, by a recovering tab hoarder.* 🐱
+_Built for tab hoarders, by a recovering tab hoarder._ 🐱
