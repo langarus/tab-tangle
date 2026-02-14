@@ -1,6 +1,9 @@
+import { useRef } from "react";
 import { TabInfo } from "../../types";
 import { TabCard } from "../../components/TabCard";
+import { DragSelectOverlay } from "../../components/DragSelectOverlay";
 import { useGeneralCtx } from "../../common/general";
+import { useDragSelect } from "../../hooks/useDragSelect";
 import g1Url from "../../assets/svg/general/g_1.svg?url";
 import g2Url from "../../assets/svg/general/g_2.svg?url";
 import g3Url from "../../assets/svg/general/g_3.svg?url";
@@ -46,9 +49,18 @@ const catNames = [
 const generalIcons = [g1Url, g2Url, g3Url, g4Url, g5Url, g6Url];
 
 export function Windows() {
-  const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
+  const { tabs, handleClose, handleCloseGroup, selectedTabs, handleSelectTabs, handleDeselectTabs } = useGeneralCtx();
   // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
   const validTabs = tabs.filter((tab) => tab.id && tab.url);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { selectionRect, isDragging } = useDragSelect({
+    containerRef,
+    tabs: validTabs,
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+  });
   // Keep a mapping of windowId to generated name
   const windowNames: Record<string, string> = {};
   const usedNames = new Set<string>();
@@ -102,7 +114,7 @@ export function Windows() {
   );
 
   return (
-    <div className="space-y-8">
+    <div ref={containerRef} className="space-y-8">
       {Object.entries(groupedTabs).map(([windowIdStr, windowTabs]) => {
         if (!windowTabs || windowTabs.length === 0) return null;
         // Generate or reuse a unique name for this window
@@ -165,6 +177,7 @@ export function Windows() {
           </div>
         );
       })}
+      <DragSelectOverlay selectionRect={selectionRect} isDragging={isDragging} />
     </div>
   );
 }

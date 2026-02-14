@@ -1,6 +1,9 @@
+import { useRef } from "react";
 import { TabInfo } from "../types";
 import { TabCard } from "./TabCard";
+import { DragSelectOverlay } from "./DragSelectOverlay";
 import { useGeneralCtx } from "../common/general";
+import { useDragSelect } from "../hooks/useDragSelect";
 import age1Url from "../assets/svg/age/age_1.svg?url";
 import age2Url from "../assets/svg/age/age_2.svg?url";
 import age3Url from "../assets/svg/age/age_3.svg?url";
@@ -19,10 +22,19 @@ interface TimeGroup {
 }
 
 function ChronologicalTabs() {
-  const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
+  const { tabs, handleClose, handleCloseGroup, selectedTabs, handleSelectTabs, handleDeselectTabs } = useGeneralCtx();
 
   // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
   const validTabs = tabs.filter((tab) => tab.id && tab.url);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { selectionRect, isDragging } = useDragSelect({
+    containerRef,
+    tabs: validTabs,
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+  });
   if (validTabs.length === 0) {
     return (
       <div className="text-center py-12">
@@ -151,7 +163,7 @@ function ChronologicalTabs() {
   };
 
   return (
-    <div className="space-y-6">
+    <div ref={containerRef} className="space-y-6">
       {timeGroups.map((group) => (
         <div
           key={group.label}
@@ -216,6 +228,7 @@ function ChronologicalTabs() {
           </div>
         </div>
       ))}
+      <DragSelectOverlay selectionRect={selectionRect} isDragging={isDragging} />
     </div>
   );
 }

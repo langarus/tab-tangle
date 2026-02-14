@@ -28,7 +28,6 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_title": "Tab Tangle",
     "default_icon": {
       "16": "icons/16.png",

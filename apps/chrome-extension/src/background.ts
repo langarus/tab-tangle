@@ -32,6 +32,35 @@ browser.runtime.onInstalled.addListener(() => {
   sendTabsToConnectedDashboards();
 });
 
+// Click on extension icon → open or focus the dashboard
+const DASHBOARD_URLS = [
+  "https://www.tab-tangle.com/app",
+  "http://localhost:3002",
+];
+
+browser.action.onClicked.addListener(async () => {
+  try {
+    const tabs = await browser.tabs.query({});
+    // Find an existing dashboard tab
+    const dashboardTab = tabs.find((tab: Tabs.Tab) =>
+      DASHBOARD_URLS.some((url) => tab.url?.startsWith(url))
+    );
+
+    if (dashboardTab?.id) {
+      // Focus existing dashboard tab
+      await browser.tabs.update(dashboardTab.id, { active: true });
+      await browser.windows.update(dashboardTab.windowId, { focused: true });
+    } else {
+      // Open new dashboard tab
+      await browser.tabs.create({ url: "https://www.tab-tangle.com/app" });
+    }
+  } catch (error) {
+    console.error("Error opening dashboard:", error);
+    // Fallback: just open a new tab
+    browser.tabs.create({ url: "https://www.tab-tangle.com/app" });
+  }
+});
+
 // Listen for connections from content scripts (dashboard bridge)
 browser.runtime.onConnect.addListener((port: Runtime.Port) => {
   if (port.name === "dashboard-bridge") {

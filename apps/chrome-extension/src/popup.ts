@@ -29,9 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Get current tab count and all tabs
   updateTabCount();
 
-  // Open dashboard
-  openDashboardBtn.addEventListener("click", () => {
-    browser.tabs.create({ url: "https://www.tab-tangle.com/app" });
+  // Open dashboard — check if a local dev server is already open, otherwise use production
+  openDashboardBtn.addEventListener("click", async () => {
+    const tabs: TabInfo[] = allTabs;
+    const localTab = tabs.find((t) => t.url?.includes("localhost:3002"));
+    if (localTab && localTab.id) {
+      // Switch to the existing local dashboard tab
+      browser.runtime.sendMessage({ type: "SWITCH_TO_TAB", tabId: localTab.id });
+    } else {
+      browser.tabs.create({ url: "https://www.tab-tangle.com/app" });
+    }
   });
 
   // Search functionality

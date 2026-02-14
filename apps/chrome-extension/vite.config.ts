@@ -18,10 +18,6 @@ export default defineConfig(({ mode }) => {
             rename: "manifest.json",
           },
           {
-            src: "src/popup.html",
-            dest: ".",
-          },
-          {
             // Copy the polyfill to dist for use by content scripts
             src: "node_modules/webextension-polyfill/dist/browser-polyfill.js",
             dest: ".",
@@ -38,7 +34,6 @@ export default defineConfig(({ mode }) => {
             : "dist",
       rollupOptions: {
         input: {
-          popup: resolve(__dirname, "src/popup.ts"),
           background: resolve(__dirname, "src/background.ts"),
           content: resolve(__dirname, "src/content.ts"),
         },

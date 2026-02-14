@@ -3,6 +3,8 @@ import { useGeneralCtx } from "../../common/general";
 import { TabCard } from "../../components/TabCard";
 import { TabInfo } from "../../types";
 import { useMemo, useEffect, useRef } from "react";
+import { DragSelectOverlay } from "../../components/DragSelectOverlay";
+import { useDragSelect } from "../../hooks/useDragSelect";
 
 export function FilteredResults() {
   const router = useRouterState();
@@ -19,6 +21,15 @@ export function FilteredResults() {
     selectedTabs,
   } = useGeneralCtx();
   const lastSelectedTabIds = useRef<string>("");
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { selectionRect, isDragging } = useDragSelect({
+    containerRef,
+    tabs,
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+  });
 
   // Get current page URL to exclude the dashboard tab itself
   const currentPageUrl =
@@ -232,7 +243,7 @@ export function FilteredResults() {
     }
 
     return (
-      <div className="space-y-6">
+      <div ref={containerRef} className="space-y-6">
         {groupedDuplicates?.map((group) => {
           const checkboxState = getGroupCheckboxState(group.tabs);
           return (
@@ -317,6 +328,7 @@ export function FilteredResults() {
             </div>
           );
         })}
+        <DragSelectOverlay selectionRect={selectionRect} isDragging={isDragging} />
       </div>
     );
   }
@@ -337,7 +349,7 @@ export function FilteredResults() {
     }
 
     return (
-      <div>
+      <div ref={containerRef}>
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Search Results
@@ -355,6 +367,7 @@ export function FilteredResults() {
             </div>
           ))}
         </div>
+        <DragSelectOverlay selectionRect={selectionRect} isDragging={isDragging} />
       </div>
     );
   }

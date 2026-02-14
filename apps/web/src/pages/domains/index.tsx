@@ -1,11 +1,23 @@
+import { useRef } from "react";
 import { TabInfo } from "../../types";
 import { TabCard } from "../../components/TabCard";
+import { DragSelectOverlay } from "../../components/DragSelectOverlay";
 import { useGeneralCtx } from "../../common/general";
+import { useDragSelect } from "../../hooks/useDragSelect";
 
 export function Domains() {
-  const { tabs, handleClose, handleCloseGroup } = useGeneralCtx();
+  const { tabs, handleClose, handleCloseGroup, selectedTabs, handleSelectTabs, handleDeselectTabs } = useGeneralCtx();
   // Filter out tabs without IDs or URLs - these can't be closed and cause UI issues
   const validTabs = tabs.filter((tab) => tab.id && tab.url);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { selectionRect, isDragging } = useDragSelect({
+    containerRef,
+    tabs: validTabs,
+    selectedTabs,
+    handleSelectTabs,
+    handleDeselectTabs,
+  });
   const groupedTabs = validTabs.reduce(
     (acc, tab) => {
       if (!tab.url) return acc;
@@ -31,7 +43,7 @@ export function Domains() {
   };
 
   return (
-    <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+    <div ref={containerRef} className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
       {Object.entries(groupedTabs).map(([domain, domainTabs]) => (
         <div
           key={domain}
@@ -114,6 +126,7 @@ export function Domains() {
           </div>
         </div>
       ))}
+      <DragSelectOverlay selectionRect={selectionRect} isDragging={isDragging} />
     </div>
   );
 }
